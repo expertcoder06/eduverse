@@ -1,4 +1,5 @@
 
+
 "use client";
 
 import Image from 'next/image';
@@ -15,6 +16,7 @@ import { Button } from '@/components/ui/button';
 import { Download, PlusCircle, Upload, FileText, Video, BookOpen } from 'lucide-react';
 import { useSearchParams } from 'next/navigation';
 import { Progress } from '@/components/ui/progress';
+export const dynamic = 'force-dynamic';
 
 const resources = {
   notes: [
@@ -188,3 +190,5 @@ export default function LibraryPage() {
 
   return <StudentLibraryPage />
 }
+
+    

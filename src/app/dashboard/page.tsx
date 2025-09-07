@@ -1,4 +1,5 @@
 
+
 "use client"
 
 import {
@@ -291,3 +292,5 @@ export default function Dashboard() {
   
   return <StudentDashboard />;
 }
+
+    

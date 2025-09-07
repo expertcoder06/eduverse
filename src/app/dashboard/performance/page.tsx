@@ -1,4 +1,5 @@
 
+
 "use client"
 import {
   Card,
@@ -14,6 +15,7 @@ import {
 import { BarChart, CheckCircle, TrendingUp, UserCheck, Users, Activity } from 'lucide-react';
 import { useSearchParams } from 'next/navigation';
 import { Progress } from '@/components/ui/progress';
+export const dynamic = 'force-dynamic';
 
 const StudentPerformancePage = () => {
     return (
@@ -139,3 +141,5 @@ export default function PerformancePage() {
 
     return <StudentPerformancePage />
 }
+
+    

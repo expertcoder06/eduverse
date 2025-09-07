@@ -1,6 +1,6 @@
 
 "use client"
-import React, { type ReactNode } from 'react';
+import React, { type ReactNode, Suspense } from 'react';
 import {
   SidebarProvider,
   Sidebar,
@@ -23,7 +23,9 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
           </div>
         </SidebarHeader>
         <SidebarContent>
-          <DashboardNav />
+            <Suspense fallback={<div>Loading...</div>}>
+                <DashboardNav />
+            </Suspense>
         </SidebarContent>
       </Sidebar>
       <SidebarInset>

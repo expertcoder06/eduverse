@@ -69,12 +69,14 @@ export function SignUpForm({ onSubmitted }: SignUpFormProps) {
   async function onSubmit(values: z.infer<typeof formSchema>) {
     setIsLoading(true);
     try {
+      /*
       if (!db) {
         throw new Error("Firestore is not initialized");
       }
       // Don't save password fields to the database
       const { password, confirmPassword, ...userData } = values;
       await addDoc(collection(db, "users"), userData);
+      */
       
       toast({
         title: "Account Created!",

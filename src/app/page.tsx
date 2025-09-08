@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { ArrowRight, Bot, BookOpen, CalendarCheck, ChevronRight, User, Users, GraduationCap, BrainCircuit, ShieldCheck, HeartPulse, BarChart } from 'lucide-react';
+import { ArrowRight, Bot, BookOpen, CalendarCheck, ChevronRight, User, Users, GraduationCap, BrainCircuit, ShieldCheck, HeartPulse, BarChart, MessageSquare } from 'lucide-react';
 import Image from 'next/image';
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
 import './landing.css';
@@ -11,6 +11,9 @@ import { useState, useRef } from 'react';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { SignUpForm } from '@/components/signup-form';
 import Autoplay from "embla-carousel-autoplay"
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
+import { Label } from '@/components/ui/label';
 
 
 const featureCards = [
@@ -222,6 +225,42 @@ export default function LandingPage() {
                 </Button>
             </div>
         </section>
+
+        <section id="feedback" className="py-20 px-4 bg-background/50">
+          <div className="container mx-auto max-w-2xl">
+            <div className="text-center animate-fade-in-up">
+              <h2 className="text-3xl md:text-4xl font-bold mb-4 font-headline">We'd Love Your Feedback</h2>
+              <p className="text-muted-foreground mb-12">
+                Have a suggestion or found a bug? Let us know!
+              </p>
+            </div>
+            <Card className="animate-fade-in-up" style={{ animationDelay: '200ms' }}>
+              <CardContent className="p-6">
+                <form className="space-y-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="name">Name</Label>
+                      <Input id="name" placeholder="Your Name" />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="email">Email</Label>
+                      <Input id="email" type="email" placeholder="Your Email" />
+                    </div>
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="message">Message</Label>
+                    <Textarea id="message" placeholder="Your feedback..." />
+                  </div>
+                  <Button type="submit" className="w-full">
+                    <MessageSquare className="mr-2 h-4 w-4" />
+                    Submit Feedback
+                  </Button>
+                </form>
+              </CardContent>
+            </Card>
+          </div>
+        </section>
+
       </main>
 
        <footer className="py-8 px-4 border-t border-white/10 bg-background/50">

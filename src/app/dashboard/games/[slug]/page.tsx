@@ -2,7 +2,7 @@
 "use client";
 
 import { motion } from 'framer-motion';
-import { notFound } from 'next/navigation';
+import { notFound, useParams } from 'next/navigation';
 
 import QuizBattleArena from '@/components/games/quiz-battle-arena';
 import VocabularyQuest from '@/components/games/vocabulary-quest';
@@ -10,12 +10,6 @@ import PuzzleLearning from '@/components/games/puzzle-learning';
 import CodingChallenge from '@/components/games/coding-challenge';
 import MemoryDuel from '@/components/games/memory-duel';
 import TreasureHunt from '@/components/games/treasure-hunt';
-
-type GamePageProps = {
-  params: {
-    slug: string;
-  };
-};
 
 const gameComponents: { [key: string]: React.ComponentType } = {
   'quiz-battle': QuizBattleArena,
@@ -26,8 +20,9 @@ const gameComponents: { [key: string]: React.ComponentType } = {
   'treasure-hunt': TreasureHunt,
 };
 
-export default function GamePage({ params }: GamePageProps) {
-  const { slug } = params;
+export default function GamePage() {
+  const params = useParams();
+  const slug = params.slug as string;
   const GameComponent = gameComponents[slug];
 
   if (!GameComponent) {

@@ -14,6 +14,7 @@ import Autoplay from "embla-carousel-autoplay"
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 
 
 const featureCards = [
@@ -57,18 +58,21 @@ const testimonials = [
         name: "Alex",
         role: "11th Grade Student",
         rating: 5,
+        avatar: "https://picsum.photos/seed/alex-testimonial/100/100",
     },
     {
         quote: "As a teacher, this platform has been a lifesaver. The ability to upload resources and track student performance in one place has saved me hours of work.",
         name: "Mrs. Davis",
         role: "High School Teacher",
         rating: 5,
+        avatar: "https://picsum.photos/seed/davis-testimonial/100/100",
     },
     {
         quote: "I love that I can see my child's attendance and grades in real-time. The notifications keep me informed and involved in his education like never before.",
         name: "Sarah J.",
         role: "Parent",
         rating: 4,
+        avatar: "https://picsum.photos/seed/sarah-testimonial/100/100",
     }
 ]
 
@@ -243,7 +247,11 @@ export default function LandingPage() {
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                     {testimonials.map((testimonial, index) => (
                         <Card key={index} className="bg-card/50 backdrop-blur-sm border-white/10 animate-fade-in-up" style={{ animationDelay: `${(index * 200) + 200}ms` }}>
-                            <CardContent className="p-6 text-center">
+                            <CardContent className="p-6 text-center flex flex-col items-center">
+                                <Avatar className="w-20 h-20 mb-4">
+                                    <AvatarImage src={testimonial.avatar} alt={testimonial.name} data-ai-hint="person" />
+                                    <AvatarFallback>{testimonial.name.charAt(0)}</AvatarFallback>
+                                </Avatar>
                                 <div className="flex justify-center mb-4">
                                     {[...Array(5)].map((_, i) => (
                                         <Star key={i} className={`h-5 w-5 ${i < testimonial.rating ? 'text-yellow-400 fill-yellow-400' : 'text-gray-300'}`} />
@@ -325,3 +333,5 @@ export default function LandingPage() {
     </div>
   );
 }
+
+    

@@ -5,7 +5,7 @@ import { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Diamond, Flag, Map, Repeat, Treasure } from 'lucide-react';
+import { Diamond, Flag, Map, Repeat, Gift } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useToast } from '@/hooks/use-toast';
 
@@ -93,7 +93,7 @@ export default function TreasureHunt() {
               animate={{ opacity: 1, scale: 1 }}
               className="w-full max-w-md text-center"
             >
-              <Treasure className="h-24 w-24 mx-auto text-yellow-400 mb-4" />
+              <Gift className="h-24 w-24 mx-auto text-yellow-400 mb-4" />
               <h2 className="text-3xl font-bold mb-2 text-primary">Treasure Found!</h2>
               <p className="text-lg text-muted-foreground mb-6">Congratulations, you've successfully completed the mission!</p>
               <Button onClick={handleRestart} size="lg">

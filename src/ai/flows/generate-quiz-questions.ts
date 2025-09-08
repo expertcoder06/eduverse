@@ -13,19 +13,19 @@
 import { ai } from '@/ai/genkit';
 import { z } from 'genkit';
 
-export const GenerateQuizInputSchema = z.object({
+const GenerateQuizInputSchema = z.object({
   subject: z.string().describe('The subject for which to generate the quiz.'),
 });
 export type GenerateQuizInput = z.infer<typeof GenerateQuizInputSchema>;
 
-export const QuizQuestionSchema = z.object({
+const QuizQuestionSchema = z.object({
   questionText: z.string().describe('The text of the quiz question.'),
   options: z.array(z.string()).describe('An array of 4 multiple-choice options.'),
   correctAnswer: z.string().describe('The correct answer from the options array.'),
 });
 export type QuizQuestion = z.infer<typeof QuizQuestionSchema>;
 
-export const GenerateQuizOutputSchema = z.object({
+const GenerateQuizOutputSchema = z.object({
   questions: z
     .array(QuizQuestionSchema)
     .describe('An array of 5 quiz questions.'),

@@ -269,8 +269,8 @@ export default function LandingPage() {
                 <div className="flex gap-6 mt-4 md:mt-0">
                     <Link href="#" className="text-muted-foreground hover:text-primary transition-colors animate-fade-in-up" style={{animationDelay: '200ms'}}>About</Link>
                     <Link href="/contact" className="text-muted-foreground hover:text-primary transition-colors animate-fade-in-up" style={{animationDelay: '300ms'}}>Contact</Link>
-                    <Link href="#" className="text-muted-foreground hover:text-primary transition-colors animate-fade-in-up" style={{animationDelay: '400ms'}}>Privacy Policy</Link>
-                    <Link href="#" className="text-muted-foreground hover:text-primary transition-colors animate-fade-in-up" style={{animationDelay: '500ms'}}>Terms of Service</Link>
+                    <Link href="/privacy" className="text-muted-foreground hover:text-primary transition-colors animate-fade-in-up" style={{animationDelay: '400ms'}}>Privacy Policy</Link>
+                    <Link href="/terms" className="text-muted-foreground hover:text-primary transition-colors animate-fade-in-up" style={{animationDelay: '500ms'}}>Terms of Service</Link>
                 </div>
             </div>
         </footer>

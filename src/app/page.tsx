@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { ArrowRight, Bot, BookOpen, CalendarCheck, ChevronRight, User, Users, GraduationCap, BrainCircuit, ShieldCheck, HeartPulse, BarChart, MessageSquare } from 'lucide-react';
+import { ArrowRight, Bot, BookOpen, CalendarCheck, ChevronRight, User, Users, GraduationCap, BrainCircuit, ShieldCheck, HeartPulse, BarChart, MessageSquare, Star } from 'lucide-react';
 import Image from 'next/image';
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
 import './landing.css';
@@ -49,6 +49,27 @@ const whyChooseUsFeatures = [
     { icon: <BarChart className="h-8 w-8 text-primary" />, title: "Career Guidance", description: "AI-powered recommendations for future paths." },
     { icon: <ShieldCheck className="h-8 w-8 text-primary" />, title: "Blockchain Security", description: "Ensuring data privacy and security for all users." },
     { icon: <HeartPulse className="h-8 w-8 text-primary" />, title: "Wellness Monitor", description: "Tracking student well-being for a healthy learning environment." },
+]
+
+const testimonials = [
+    {
+        quote: "The AI mentor is incredible! It helped me identify my weak spots in Physics and created a study plan that actually worked. My grades have improved so much.",
+        name: "Alex",
+        role: "11th Grade Student",
+        rating: 5,
+    },
+    {
+        quote: "As a teacher, this platform has been a lifesaver. The ability to upload resources and track student performance in one place has saved me hours of work.",
+        name: "Mrs. Davis",
+        role: "High School Teacher",
+        rating: 5,
+    },
+    {
+        quote: "I love that I can see my child's attendance and grades in real-time. The notifications keep me informed and involved in his education like never before.",
+        name: "Sarah J.",
+        role: "Parent",
+        rating: 4,
+    }
 ]
 
 export default function LandingPage() {
@@ -214,17 +235,30 @@ export default function LandingPage() {
             </div>
         </section>
 
-        <section id="signup" className="py-20 px-4 text-center">
-            <div className="container mx-auto animate-fade-in-up">
-                <h2 className="text-3xl md:text-4xl font-bold mb-4 font-headline">Ready to Join?</h2>
-                <p className="text-muted-foreground max-w-2xl mx-auto mb-8">
-                    Create an account today and take the first step towards a smarter learning future.
-                </p>
-                <Button asChild size="lg" className="text-lg transition-transform transform hover:scale-105 animate-pulse-glow">
-                    <Link href="/login">Get Started for Free <ArrowRight className="h-5 w-5 ml-2" /></Link>
-                </Button>
+        <section id="testimonials" className="py-20 px-4">
+            <div className="container mx-auto">
+                <div className="text-center animate-fade-in-up">
+                    <h2 className="text-3xl md:text-4xl font-bold mb-12 font-headline">What Our Users Say</h2>
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    {testimonials.map((testimonial, index) => (
+                        <Card key={index} className="bg-card/50 backdrop-blur-sm border-white/10 animate-fade-in-up" style={{ animationDelay: `${(index * 200) + 200}ms` }}>
+                            <CardContent className="p-6 text-center">
+                                <div className="flex justify-center mb-4">
+                                    {[...Array(5)].map((_, i) => (
+                                        <Star key={i} className={`h-5 w-5 ${i < testimonial.rating ? 'text-yellow-400 fill-yellow-400' : 'text-gray-300'}`} />
+                                    ))}
+                                </div>
+                                <blockquote className="italic text-muted-foreground">"{testimonial.quote}"</blockquote>
+                                <p className="mt-4 font-semibold text-foreground">{testimonial.name}</p>
+                                <p className="text-sm text-muted-foreground">{testimonial.role}</p>
+                            </CardContent>
+                        </Card>
+                    ))}
+                </div>
             </div>
         </section>
+
 
         <section id="feedback" className="py-20 px-4 bg-background/50">
           <div className="container mx-auto max-w-2xl">
@@ -260,6 +294,20 @@ export default function LandingPage() {
             </Card>
           </div>
         </section>
+
+        <section id="signup" className="py-20 px-4 text-center">
+            <div className="container mx-auto animate-fade-in-up">
+                <h2 className="text-3xl md:text-4xl font-bold mb-4 font-headline">Ready to Join?</h2>
+                <p className="text-muted-foreground max-w-2xl mx-auto mb-8">
+                    Create an account today and take the first step towards a smarter learning future.
+                </p>
+                <Button asChild size="lg" className="text-lg transition-transform transform hover:scale-105 animate-pulse-glow">
+                    <Link href="/login">Get Started for Free <ArrowRight className="h-5 w-5 ml-2" /></Link>
+                </Button>
+            </div>
+        </section>
+
+
 
       </main>
 

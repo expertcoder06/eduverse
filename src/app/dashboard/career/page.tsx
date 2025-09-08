@@ -160,7 +160,7 @@ export default function CareerPage() {
             {!isLoading && !careerAdvice && (
               <div className="flex h-full items-center justify-center rounded-lg border-2 border-dashed">
                 <p className="text-muted-foreground">
-                  Waiting for your details...
+                  Your future awaits...
                 </p>
               </div>
             )}
@@ -170,5 +170,3 @@ export default function CareerPage() {
     </div>
   );
 }
-
-    

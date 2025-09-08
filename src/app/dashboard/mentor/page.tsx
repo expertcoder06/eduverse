@@ -210,7 +210,7 @@ export default function MentorPage() {
             {!isLoading && !studyPlan && (
               <div className="flex h-full items-center justify-center rounded-lg border-2 border-dashed">
                 <p className="text-muted-foreground">
-                  Waiting for your details...
+                  Your plan awaits...
                 </p>
               </div>
             )}

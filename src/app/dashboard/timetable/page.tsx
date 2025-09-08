@@ -169,7 +169,7 @@ export default function TimetablePage() {
             {!isLoading && !timetable && (
               <div className="flex h-full items-center justify-center rounded-lg border-2 border-dashed">
                 <p className="text-muted-foreground">
-                  Waiting for generation...
+                  Your schedule awaits...
                 </p>
               </div>
             )}

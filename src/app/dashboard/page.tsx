@@ -154,7 +154,7 @@ const ParentDashboard = () => {
 
 
 const StudentDashboard = () => {
-    const getHref = (path: string) => `/dashboard/${path}?role=student`;
+    const getHref = (path: string) => `/dashboard${path}?role=student`;
     return (
      <div className="flex flex-col gap-6 animate-fade-in-up">
       <div>
@@ -179,7 +179,7 @@ const StudentDashboard = () => {
           </CardContent>
           <CardFooter>
             <Button variant="outline" className="w-full" asChild>
-              <Link href={getHref("timetable")}>View Full Timetable <ArrowRight/></Link>
+              <Link href={getHref("/timetable")}>View Full Timetable <ArrowRight/></Link>
             </Button>
           </CardFooter>
         </Card>
@@ -217,7 +217,7 @@ const StudentDashboard = () => {
           </CardContent>
            <CardFooter>
             <Button variant="outline" className="w-full" asChild>
-              <Link href={getHref("performance")}>View Performance Details <ArrowRight/></Link>
+              <Link href={getHref("/performance")}>View Performance Details <ArrowRight/></Link>
             </Button>
           </CardFooter>
         </Card>
@@ -248,7 +248,7 @@ const StudentDashboard = () => {
           </CardContent>
            <CardFooter>
             <Button variant="outline" className="w-full" asChild>
-              <Link href={getHref("notifications")}>View All Notifications <ArrowRight/></Link>
+              <Link href={getHref("/notifications")}>View All Notifications <ArrowRight/></Link>
             </Button>
           </CardFooter>
         </Card>
@@ -269,7 +269,7 @@ const StudentDashboard = () => {
                 </CardContent>
                 <CardFooter>
                     <Button variant="default" className="w-full" asChild>
-                        <Link href={getHref("mentor")}>Get Personalized Plan <ArrowRight/></Link>
+                        <Link href={getHref("/mentor")}>Get Personalized Plan <ArrowRight/></Link>
                     </Button>
                 </CardFooter>
             </Card>
@@ -292,5 +292,3 @@ export default function Dashboard() {
   
   return <StudentDashboard />;
 }
-
-    

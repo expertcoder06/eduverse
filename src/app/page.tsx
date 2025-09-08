@@ -323,7 +323,7 @@ export default function LandingPage() {
             <div className="container mx-auto flex flex-col md:flex-row justify-between items-center text-center md:text-left">
                 <p className="text-muted-foreground">&copy; {new Date().getFullYear()} EduVerse. All rights reserved.</p>
                 <div className="flex gap-6 mt-4 md:mt-0">
-                    <Link href="#" className="text-muted-foreground hover:text-primary transition-colors animate-fade-in-up" style={{animationDelay: '200ms'}}>About</Link>
+                    <Link href="/about" className="text-muted-foreground hover:text-primary transition-colors animate-fade-in-up" style={{animationDelay: '200ms'}}>About</Link>
                     <Link href="/contact" className="text-muted-foreground hover:text-primary transition-colors animate-fade-in-up" style={{animationDelay: '300ms'}}>Contact</Link>
                     <Link href="/privacy" className="text-muted-foreground hover:text-primary transition-colors animate-fade-in-up" style={{animationDelay: '400ms'}}>Privacy Policy</Link>
                     <Link href="/terms" className="text-muted-foreground hover:text-primary transition-colors animate-fade-in-up" style={{animationDelay: '500ms'}}>Terms of Service</Link>
@@ -333,5 +333,3 @@ export default function LandingPage() {
     </div>
   );
 }
-
-    

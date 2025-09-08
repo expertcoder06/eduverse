@@ -27,7 +27,8 @@ const gameComponents: { [key: string]: React.ComponentType } = {
 };
 
 export default function GamePage({ params }: GamePageProps) {
-  const GameComponent = gameComponents[params.slug];
+  const { slug } = params;
+  const GameComponent = gameComponents[slug];
 
   if (!GameComponent) {
     notFound();

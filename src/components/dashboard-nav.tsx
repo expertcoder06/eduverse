@@ -22,6 +22,7 @@ import {
   Upload,
   Users,
   MessageSquare,
+  Gamepad2
 } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { useMemo } from 'react';
@@ -33,6 +34,7 @@ const studentNav = [
   { href: '/dashboard/chatbot', icon: Bot, label: 'AI Chatbot' },
   { href: '/dashboard/performance', icon: TrendingUp, label: 'Performance' },
   { href: '/dashboard/rewards', icon: Trophy, label: 'Rewards' },
+  { href: '/dashboard/games', icon: Gamepad2, label: 'Games' },
   { href: '/dashboard/mentor', icon: User, label: 'Virtual Mentor' },
   { href: '/dashboard/career', icon: Briefcase, label: 'Career' },
   { href: '/dashboard/notifications', icon: Bell, label: 'Notifications' },
@@ -73,7 +75,9 @@ export function DashboardNav() {
   const navItems = useMemo(() => getNavItems(role), [role]);
   
   const getHref = (href: string) => {
-    return `${href}?role=${role || 'student'}`;
+    const newParams = new URLSearchParams(searchParams.toString());
+    newParams.set('role', role || 'student');
+    return `${href}?${newParams.toString()}`;
   }
 
   return (

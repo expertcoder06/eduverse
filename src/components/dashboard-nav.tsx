@@ -22,7 +22,8 @@ import {
   Upload,
   Users,
   MessageSquare,
-  Gamepad2
+  Gamepad2,
+  Video
 } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { useMemo } from 'react';
@@ -31,6 +32,7 @@ const studentNav = [
   { href: '/dashboard', icon: LayoutDashboard, label: 'Dashboard' },
   { href: '/dashboard/timetable', icon: Calendar, label: 'Timetable' },
   { href: '/dashboard/library', icon: Library, label: 'Resource Library' },
+  { href: '/dashboard/live-classes', icon: Video, label: 'Live Classes' },
   { href: '/dashboard/chatbot', icon: Bot, label: 'AI Chatbot' },
   { href: '/dashboard/performance', icon: TrendingUp, label: 'Performance' },
   { href: '/dashboard/rewards', icon: Trophy, label: 'Rewards' },
@@ -44,6 +46,7 @@ const teacherNav = [
     { href: '/dashboard', icon: LayoutDashboard, label: 'Dashboard' },
     { href: '/dashboard/timetable', icon: Calendar, label: 'Class Schedule' },
     { href: '/dashboard/library', icon: Upload, label: 'Manage Resources' },
+    { href: '/dashboard/live-classes', icon: Video, label: 'Live Classes' },
     { href: '/dashboard/performance', icon: Users, label: 'Student Performance' },
     { href: '/dashboard/notifications', icon: MessageSquare, label: 'Announcements' },
 ];

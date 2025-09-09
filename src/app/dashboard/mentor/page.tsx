@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState } from 'react';
@@ -34,8 +35,8 @@ import { useToast } from '@/hooks/use-toast';
 const formSchema = z.object({
   studentName: z.string().default('Alex'),
   subject: z.string().min(2, 'Subject is required.'),
-  strengths: z.string().min(10, 'Please describe your strengths.'),
-  weaknesses: z.string().min(10, 'Please describe your weaknesses.'),
+  strengths: z.string().min(10, 'Please describe strengths.'),
+  weaknesses: z.string().min(10, 'Please describe weaknesses.'),
   examDate: z.date({ required_error: 'Exam date is required.' }),
 });
 
@@ -50,7 +51,7 @@ export default function MentorPage() {
       studentName: 'Alex',
       subject: 'History',
       strengths: 'Good at remembering dates and key figures.',
-      weaknesses: 'Struggle with understanding the broader context and consequences of events.',
+      weaknesses: 'Struggles with understanding the broader context and consequences of events.',
     },
   });
 
@@ -80,16 +81,16 @@ export default function MentorPage() {
       <div>
         <h1 className="text-3xl font-bold font-headline">Virtual Mentor</h1>
         <p className="text-muted-foreground">
-          Get a personalized study plan to ace your exams.
+          Get a personalized study plan to help your student succeed.
         </p>
       </div>
 
       <div className="grid gap-8 lg:grid-cols-2">
         <Card>
           <CardHeader>
-            <CardTitle>Create Your Plan</CardTitle>
+            <CardTitle>Create a Plan</CardTitle>
             <CardDescription>
-              Tell the AI about your learning style and goals.
+              Tell the AI about the student's learning style and goals.
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -115,7 +116,7 @@ export default function MentorPage() {
                     <FormItem>
                       <FormLabel>Strengths</FormLabel>
                       <FormControl>
-                        <Textarea placeholder="What are you good at in this subject?" {...field} />
+                        <Textarea placeholder="What is the student good at in this subject?" {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -128,7 +129,7 @@ export default function MentorPage() {
                     <FormItem>
                       <FormLabel>Weaknesses</FormLabel>
                       <FormControl>
-                        <Textarea placeholder="What do you struggle with?" {...field} />
+                        <Textarea placeholder="What does the student struggle with?" {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -179,7 +180,7 @@ export default function MentorPage() {
                   ) : (
                     <Lightbulb className="mr-2 h-4 w-4" />
                   )}
-                  Get My Plan
+                  Generate Study Plan
                 </Button>
               </form>
             </Form>
@@ -188,9 +189,9 @@ export default function MentorPage() {
 
         <Card className="flex flex-col">
           <CardHeader>
-            <CardTitle>Your Personalized Study Plan</CardTitle>
+            <CardTitle>The Student's Personalized Study Plan</CardTitle>
             <CardDescription>
-              A tailored plan to help you succeed will appear here.
+              A tailored plan to help the student succeed will appear here.
             </CardDescription>
           </CardHeader>
           <CardContent className="flex-1">
@@ -198,7 +199,7 @@ export default function MentorPage() {
               <div className="flex h-full items-center justify-center">
                 <div className="text-center text-muted-foreground">
                   <Loader2 className="mx-auto h-8 w-8 animate-spin" />
-                  <p className="mt-2">Crafting your plan...</p>
+                  <p className="mt-2">Crafting the plan...</p>
                 </div>
               </div>
             )}
@@ -210,7 +211,7 @@ export default function MentorPage() {
             {!isLoading && !studyPlan && (
               <div className="flex h-full items-center justify-center rounded-lg border-2 border-dashed">
                 <p className="text-muted-foreground">
-                  Your plan awaits...
+                  The generated plan awaits...
                 </p>
               </div>
             )}

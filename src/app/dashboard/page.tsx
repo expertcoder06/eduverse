@@ -227,7 +227,7 @@ const ParentDashboard = () => {
                     </CardContent>
                      <CardFooter>
                         <Button variant="outline" className="w-full" asChild>
-                            <Link href={getHref("/mentor")}>Create a Study Plan Together<ArrowRight/></Link>
+                            <Link href={getHref("/dashboard/mentor")}>Create a Study Plan Together<ArrowRight/></Link>
                         </Button>
                     </CardFooter>
                 </Card>

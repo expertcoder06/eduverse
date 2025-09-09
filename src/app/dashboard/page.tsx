@@ -1,5 +1,4 @@
 
-
 "use client"
 
 import {
@@ -21,7 +20,10 @@ import {
   Users,
   Book,
   ClipboardList,
-  MessageSquare
+  MessageSquare,
+  UserCheck,
+  CheckCircle,
+  FileText
 } from 'lucide-react';
 import { ProgressChart, SubjectPerformanceChart } from '@/components/performance-charts';
 import { useSearchParams } from 'next/navigation';
@@ -38,6 +40,12 @@ const recentActivity = [
     { student: 'Alice Johnson', activity: 'submitted an assignment for Physics 101.', avatar: 'https://picsum.photos/seed/alice/40/40' },
     { student: 'Bob Williams', activity: 'scored 95% on the History quiz.', avatar: 'https://picsum.photos/seed/bob/40/40' },
     { student: 'Charlie Brown', activity: 'has a 3-day study streak.', avatar: 'https://picsum.photos/seed/charlie/40/40' },
+]
+
+const upcomingDeadlines = [
+    { title: "Math Assignment 5", due: "Friday, 11:59 PM", type: 'assignment' },
+    { title: "History Midterm Exam", due: "Next Monday, 10:00 AM", type: 'exam' },
+    { title: "Science Project Proposal", due: "Next Wednesday", type: 'assignment' },
 ]
 
 
@@ -145,8 +153,84 @@ const ParentDashboard = () => {
              <div>
                 <h1 className="text-3xl font-bold font-headline">Welcome, Mr. Smith!</h1>
                 <p className="text-muted-foreground">
-                Here's an overview of Alex's progress.
+                Here's an overview of Alex's progress and upcoming activities.
                 </p>
+            </div>
+            <div className="grid gap-6 md:grid-cols-3">
+                <Card className="transition-transform transform hover:scale-105 hover:shadow-lg">
+                    <CardHeader className="flex flex-row items-center justify-between pb-2">
+                        <CardTitle className="text-sm font-medium">Attendance</CardTitle>
+                        <UserCheck className="h-4 w-4 text-muted-foreground" />
+                    </CardHeader>
+                    <CardContent>
+                        <div className="text-2xl font-bold">95%</div>
+                        <p className="text-xs text-muted-foreground">Present for all classes this week</p>
+                    </CardContent>
+                </Card>
+                <Card className="transition-transform transform hover:scale-105 hover:shadow-lg">
+                    <CardHeader className="flex flex-row items-center justify-between pb-2">
+                        <CardTitle className="text-sm font-medium">Overall Grade</CardTitle>
+                        <CheckCircle className="h-4 w-4 text-muted-foreground" />
+                    </CardHeader>
+                    <CardContent>
+                        <div className="text-2xl font-bold">A-</div>
+                        <p className="text-xs text-muted-foreground">Slight improvement from last month</p>
+                    </CardContent>
+                </Card>
+                <Card className="transition-transform transform hover:scale-105 hover:shadow-lg">
+                    <CardHeader className="flex flex-row items-center justify-between pb-2">
+                        <CardTitle className="text-sm font-medium">Recent Score</CardTitle>
+                        <TrendingUp className="h-4 w-4 text-muted-foreground" />
+                    </CardHeader>
+                    <CardContent>
+                        <div className="text-2xl font-bold">88%</div>
+                        <p className="text-xs text-muted-foreground">On the latest Physics quiz</p>
+                    </CardContent>
+                </Card>
+            </div>
+
+            <div className="grid gap-6 lg:grid-cols-2">
+                <SubjectPerformanceChart />
+                <ProgressChart />
+            </div>
+
+             <div className="grid gap-6 lg:grid-cols-2">
+                <Card>
+                    <CardHeader>
+                        <CardTitle>Upcoming Deadlines</CardTitle>
+                        <CardDescription>Keep track of Alex's upcoming assignments and exams.</CardDescription>
+                    </CardHeader>
+                    <CardContent className="space-y-4">
+                        {upcomingDeadlines.map((item) => (
+                        <div key={item.title} className="flex items-center">
+                            <div className="flex h-8 w-8 items-center justify-center rounded-full bg-secondary">
+                                <FileText className="h-4 w-4 text-secondary-foreground" />
+                            </div>
+                            <div className="ml-4 space-y-1">
+                                <p className="text-sm font-medium leading-none">{item.title}</p>
+                                <p className="text-sm text-muted-foreground">{item.due}</p>
+                            </div>
+                        </div>
+                        ))}
+                    </CardContent>
+                </Card>
+                <Card className="flex flex-col transition-all duration-300 hover:shadow-lg hover:-translate-y-1">
+                    <CardHeader>
+                        <CardTitle className="flex items-center gap-2">
+                        <Lightbulb className="h-5 w-5 text-accent" />
+                        <span>AI Mentor Suggestion for Alex</span>
+                        </CardTitle>
+                        <CardDescription>A tip to help support his learning.</CardDescription>
+                    </CardHeader>
+                    <CardContent className="flex-grow">
+                        <p className="text-lg italic text-muted-foreground">"Alex has been doing great in Math but could use some extra practice in History. Try reviewing flashcards on key historical dates together this weekend."</p>
+                    </CardContent>
+                     <CardFooter>
+                        <Button variant="outline" className="w-full" asChild>
+                            <Link href={getHref("/mentor")}>Create a Study Plan Together<ArrowRight/></Link>
+                        </Button>
+                    </CardFooter>
+                </Card>
             </div>
         </div>
     )
@@ -292,3 +376,5 @@ export default function Dashboard() {
   
   return <StudentDashboard />;
 }
+
+    

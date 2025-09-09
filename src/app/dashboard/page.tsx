@@ -28,6 +28,7 @@ import {
 import { ProgressChart, SubjectPerformanceChart } from '@/components/performance-charts';
 import { useSearchParams } from 'next/navigation';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Suspense } from 'react';
 
 
 const teacherClasses = [
@@ -362,7 +363,7 @@ const StudentDashboard = () => {
     )
 }
 
-export default function Dashboard() {
+function DashboardContent() {
   const searchParams = useSearchParams();
   const role = searchParams.get('role') || 'student';
   
@@ -377,4 +378,10 @@ export default function Dashboard() {
   return <StudentDashboard />;
 }
 
-    
+export default function Dashboard() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <DashboardContent />
+    </Suspense>
+  )
+}

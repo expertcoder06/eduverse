@@ -8,6 +8,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Video, PlayCircle, History, Radio } from 'lucide-react';
 import Image from 'next/image';
+import { Suspense } from 'react';
 
 const recordings = [
   { title: 'Introduction to Quantum Physics', subject: 'Physics', date: '2023-10-26', image: 'https://picsum.photos/seed/quantum/400/225' },
@@ -116,7 +117,7 @@ const TeacherLiveClassesPage = () => (
   </div>
 );
 
-export default function LiveClassesPage() {
+function LiveClassesContent() {
   const searchParams = useSearchParams();
   const role = searchParams.get('role');
 
@@ -125,4 +126,12 @@ export default function LiveClassesPage() {
   }
 
   return <StudentLiveClassesPage />;
+}
+
+export default function LiveClassesPage() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <LiveClassesContent />
+    </Suspense>
+  )
 }

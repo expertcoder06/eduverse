@@ -15,6 +15,7 @@ import {
 import { BarChart, CheckCircle, TrendingUp, UserCheck, Users, Activity } from 'lucide-react';
 import { useSearchParams } from 'next/navigation';
 import { Progress } from '@/components/ui/progress';
+import { Suspense } from 'react';
 export const dynamic = 'force-dynamic';
 
 const StudentPerformancePage = () => {
@@ -131,7 +132,7 @@ const TeacherPerformancePage = () => {
     )
 }
 
-export default function PerformancePage() {
+function PerformanceContent() {
     const searchParams = useSearchParams();
     const role = searchParams.get('role');
 
@@ -140,4 +141,12 @@ export default function PerformancePage() {
     }
 
     return <StudentPerformancePage />
+}
+
+export default function PerformancePage() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <PerformanceContent />
+    </Suspense>
+  )
 }

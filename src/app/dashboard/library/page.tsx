@@ -16,6 +16,7 @@ import { Button } from '@/components/ui/button';
 import { Download, PlusCircle, Upload, FileText, Video, BookOpen } from 'lucide-react';
 import { useSearchParams } from 'next/navigation';
 import { Progress } from '@/components/ui/progress';
+import { Suspense } from 'react';
 export const dynamic = 'force-dynamic';
 
 const resources = {
@@ -180,7 +181,7 @@ const StudentLibraryPage = () => (
 </div>
 )
 
-export default function LibraryPage() {
+function LibraryContent() {
   const searchParams = useSearchParams();
   const role = searchParams.get('role');
 
@@ -189,4 +190,13 @@ export default function LibraryPage() {
   }
 
   return <StudentLibraryPage />
+}
+
+
+export default function LibraryPage() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <LibraryContent />
+    </Suspense>
+  )
 }

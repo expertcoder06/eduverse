@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Swords, Puzzle, BrainCircuit, Code, BookOpen, Diamond } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useSearchParams } from 'next/navigation';
+import { Suspense } from 'react';
 
 const games = [
   {
@@ -47,7 +48,7 @@ const games = [
   },
 ];
 
-export default function GamesPage() {
+function GamesContent() {
   const searchParams = useSearchParams();
   const role = searchParams.get('role');
 
@@ -116,4 +117,12 @@ export default function GamesPage() {
       </motion.div>
     </div>
   );
+}
+
+export default function GamesPage() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <GamesContent />
+    </Suspense>
+  )
 }

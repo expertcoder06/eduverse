@@ -1,7 +1,7 @@
 
 "use client";
 
-import { useSearchParams } from 'next/navigation';
+import { useSearchParams, useRouter } from 'next/navigation';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -28,6 +28,7 @@ const initialRecordings = [
 
 type Recording = typeof initialRecordings[0];
 type LiveClass = {
+    id: string;
     title: string;
     teacherName: string;
     isLive: boolean;
@@ -86,12 +87,13 @@ const EditRecordingDialog = ({ recording, onSave }: { recording: Recording, onSa
 
 
 const StudentLiveClassesPage = ({recordings, liveClass}: {recordings: Recording[], liveClass: LiveClass | null}) => {
-    const { toast } = useToast();
+    const router = useRouter();
+    const searchParams = useSearchParams();
+
     const handleJoinLive = () => {
-        toast({
-            title: "Joining Live Class",
-            description: "You are now being connected to the session."
-        })
+        if (!liveClass) return;
+        const newParams = new URLSearchParams(searchParams.toString());
+        router.push(`/dashboard/live-classes/${liveClass.id}?${newParams.toString()}`);
     }
 
     return (
@@ -153,12 +155,13 @@ const StudentLiveClassesPage = ({recordings, liveClass}: {recordings: Recording[
     );
 };
 
-const TeacherLiveClassesPage = ({recordings, onEdit, onDelete, onGoLive}: {recordings: Recording[], onEdit: (rec: Recording) => void, onDelete: (id: number) => void, onGoLive: (title: string) => void}) => {
+const TeacherLiveClassesPage = ({recordings, onEdit, onDelete, onGoLive}: {recordings: Recording[], onEdit: (rec: Recording) => void, onDelete: (id: number) => void, onGoLive: (title: string, sessionId: string) => void}) => {
     const [classTitle, setClassTitle] = useState('');
     
     const handleGoLiveClick = () => {
         if (classTitle.trim()) {
-            onGoLive(classTitle.trim());
+            const sessionId = `class-${Date.now()}`;
+            onGoLive(classTitle.trim(), sessionId);
         }
     }
   
@@ -245,6 +248,7 @@ const TeacherLiveClassesPage = ({recordings, onEdit, onDelete, onGoLive}: {recor
 
 function LiveClassesContent() {
   const searchParams = useSearchParams();
+  const router = useRouter();
   const role = searchParams.get('role');
   const [recordings, setRecordings] = useState(initialRecordings);
   const [liveClass, setLiveClass] = useState<LiveClass | null>(null);
@@ -277,8 +281,9 @@ function LiveClassesContent() {
       })
   }
 
-  const handleGoLive = (title: string) => {
+  const handleGoLive = (title: string, sessionId: string) => {
       const newLiveClass: LiveClass = {
+          id: sessionId,
           title,
           teacherName: userName,
           isLive: true,
@@ -292,7 +297,10 @@ function LiveClassesContent() {
       toast({
           title: "You are now live!",
           description: `The class "${title}" has started.`,
-      })
+      });
+
+      const newParams = new URLSearchParams(searchParams.toString());
+      router.push(`/dashboard/live-classes/${sessionId}?${newParams.toString()}`);
   }
 
   if (role === 'teacher') {

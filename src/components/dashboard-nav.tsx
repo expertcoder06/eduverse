@@ -117,8 +117,8 @@ export function DashboardNav() {
       <div className="mt-auto flex flex-col gap-2 p-2">
          <SidebarMenu>
             <SidebarMenuItem>
-                <SidebarMenuButton asChild tooltip="Settings">
-                <Link href="#">
+                <SidebarMenuButton asChild tooltip="Settings" isActive={pathname === '/dashboard/settings'}>
+                <Link href={getHref('/dashboard/settings')}>
                     <Settings />
                     <span>Settings</span>
                 </Link>

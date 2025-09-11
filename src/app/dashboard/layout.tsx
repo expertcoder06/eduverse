@@ -11,8 +11,10 @@ import {
 } from '@/components/ui/sidebar';
 import { DashboardNav } from '@/components/dashboard-nav';
 import { Logo } from '@/components/logo';
+import { useTheme } from 'next-themes';
 
 export default function DashboardLayout({ children }: { children: ReactNode }) {
+  const { theme } = useTheme()
   return (
     <SidebarProvider>
       <Sidebar>

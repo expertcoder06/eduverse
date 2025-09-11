@@ -72,8 +72,9 @@ export function SignUpForm({ onSubmitted }: SignUpFormProps) {
       if (!db) {
         throw new Error("Firestore is not initialized");
       }
-      // Don't save password fields to the database
-      const { password, confirmPassword, ...userData } = values;
+      // For this demo, we'll store the password directly.
+      // In a real production app, you should ALWAYS hash the password.
+      const { confirmPassword, ...userData } = values;
       await addDoc(collection(db, "users"), userData);
       
       toast({

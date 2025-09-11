@@ -15,10 +15,16 @@ import {
 import { BarChart, CheckCircle, TrendingUp, UserCheck, Users, Activity } from 'lucide-react';
 import { useSearchParams } from 'next/navigation';
 import { Progress } from '@/components/ui/progress';
-import { Suspense } from 'react';
+import { Suspense, useEffect, useState } from 'react';
 export const dynamic = 'force-dynamic';
 
-const StudentPerformancePage = () => {
+const StudentPerformancePage = ({userName}: {userName: string}) => {
+    const isSanjay = userName.toLowerCase() === 'sanjay sharma';
+    const learningScore = isSanjay ? 85 : 0;
+    const improvement = isSanjay ? '+5% from last month' : 'Start your journey!';
+    const overallGrade = isSanjay ? 'A-' : 'N/A';
+    const gradeComment = isSanjay ? 'Tracking for a strong semester' : 'Complete some activities to get a grade';
+
     return (
     <div className="space-y-6 animate-fade-in-up">
       <div>
@@ -35,10 +41,10 @@ const StudentPerformancePage = () => {
               <TrendingUp className="h-4 w-4" />
               Learning Score
             </CardDescription>
-            <CardTitle className="text-4xl">85%</CardTitle>
+            <CardTitle className="text-4xl">{learningScore}%</CardTitle>
           </CardHeader>
           <CardContent>
-            <p className="text-xs text-muted-foreground">+5% from last month</p>
+            <p className="text-xs text-muted-foreground">{improvement}</p>
           </CardContent>
         </Card>
         <Card className="transition-transform transform hover:scale-105 hover:shadow-lg">
@@ -47,10 +53,10 @@ const StudentPerformancePage = () => {
               <BarChart className="h-4 w-4" />
               Improvement Meter
             </CardDescription>
-            <CardTitle className="text-4xl">Good</CardTitle>
+            <CardTitle className="text-4xl">{isSanjay ? "Good" : "New"}</CardTitle>
           </CardHeader>
           <CardContent>
-            <p className="text-xs text-muted-foreground">Consistent effort detected</p>
+            <p className="text-xs text-muted-foreground">{isSanjay ? "Consistent effort detected" : "Ready to start"}</p>
           </CardContent>
         </Card>
         <Card className="transition-transform transform hover:scale-105 hover:shadow-lg">
@@ -59,17 +65,17 @@ const StudentPerformancePage = () => {
               <CheckCircle className="h-4 w-4" />
               Overall Grade
             </CardDescription>
-            <CardTitle className="text-4xl">A-</CardTitle>
+            <CardTitle className="text-4xl">{overallGrade}</CardTitle>
           </CardHeader>
           <CardContent>
-            <p className="text-xs text-muted-foreground">Tracking for a strong semester</p>
+            <p className="text-xs text-muted-foreground">{gradeComment}</p>
           </CardContent>
         </Card>
       </div>
 
       <div className="grid gap-6 lg:grid-cols-2">
-        <SubjectPerformanceChart />
-        <ProgressChart />
+        <SubjectPerformanceChart userName={userName} />
+        <ProgressChart userName={userName} />
       </div>
     </div>
     )
@@ -125,8 +131,8 @@ const TeacherPerformancePage = () => {
       </div>
 
       <div className="grid gap-6 lg:grid-cols-2">
-        <SubjectPerformanceChart />
-        <ProgressChart />
+        <SubjectPerformanceChart userName="teacher" />
+        <ProgressChart userName="teacher" />
       </div>
     </div>
     )
@@ -135,12 +141,23 @@ const TeacherPerformancePage = () => {
 function PerformanceContent() {
     const searchParams = useSearchParams();
     const role = searchParams.get('role');
+    const [userName, setUserName] = useState('');
+
+    useEffect(() => {
+        if (typeof window !== 'undefined') {
+            const storedUser = localStorage.getItem('user');
+            if (storedUser) {
+                const user = JSON.parse(storedUser);
+                setUserName(user.name);
+            }
+        }
+    }, []);
 
     if (role === 'teacher') {
         return <TeacherPerformancePage />
     }
 
-    return <StudentPerformancePage />
+    return <StudentPerformancePage userName={userName} />
 }
 
 export default function PerformancePage() {

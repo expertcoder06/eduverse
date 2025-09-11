@@ -124,7 +124,7 @@ const TeacherDashboard = ({userName}: {userName: string}) => {
                 </Card>
             </div>
              <div className="grid gap-6 lg:grid-cols-2">
-                <SubjectPerformanceChart />
+                <SubjectPerformanceChart userName={userName}/>
                 <Card className="flex flex-col transition-all duration-300 hover:shadow-lg hover:-translate-y-1">
                     <CardHeader>
                         <CardTitle className="flex items-center gap-2">
@@ -191,8 +191,8 @@ const ParentDashboard = ({userName}: {userName: string}) => {
             </div>
 
             <div className="grid gap-6 lg:grid-cols-2">
-                <SubjectPerformanceChart />
-                <ProgressChart />
+                <SubjectPerformanceChart userName={userName} />
+                <ProgressChart userName={userName}/>
             </div>
 
              <div className="grid gap-6 lg:grid-cols-2">
@@ -240,6 +240,8 @@ const ParentDashboard = ({userName}: {userName: string}) => {
 
 const StudentDashboard = ({userName}: {userName: string}) => {
     const getHref = (path: string) => `/dashboard${path}?role=student`;
+    const learningScore = userName.toLowerCase() === 'sanjay sharma' ? 85 : 0;
+    
     return (
      <div className="flex flex-col gap-6 animate-fade-in-up">
       <div>
@@ -288,7 +290,7 @@ const StudentDashboard = ({userName}: {userName: string}) => {
                 />
                 <path
                   className="stroke-current text-accent"
-                  strokeDasharray="85, 100"
+                  strokeDasharray={`${learningScore}, 100`}
                   d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
                   fill="none"
                   strokeWidth="3"
@@ -296,7 +298,7 @@ const StudentDashboard = ({userName}: {userName: string}) => {
                 />
               </svg>
               <div className="absolute inset-0 flex flex-col items-center justify-center">
-                <span className="text-3xl font-bold">85%</span>
+                <span className="text-3xl font-bold">{learningScore}%</span>
               </div>
             </div>
           </CardContent>
@@ -340,7 +342,7 @@ const StudentDashboard = ({userName}: {userName: string}) => {
       </div>
 
        <div className="grid gap-6 lg:grid-cols-2">
-            <ProgressChart />
+            <ProgressChart userName={userName} />
             <Card className="flex flex-col transition-all duration-300 hover:shadow-lg hover:-translate-y-1">
                 <CardHeader>
                     <CardTitle className="flex items-center gap-2">

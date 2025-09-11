@@ -1,3 +1,4 @@
+
 "use client";
 
 import { Bar, BarChart, Line, LineChart, XAxis, YAxis } from "recharts";
@@ -9,12 +10,20 @@ import {
   ChartConfig,
 } from "@/components/ui/chart";
 
-const subjectPerformanceData = [
+const sanjaySubjectPerformanceData = [
   { subject: "Math", score: 88 },
   { subject: "Science", score: 92 },
   { subject: "History", score: 78 },
   { subject: "English", score: 85 },
   { subject: "Art", score: 95 },
+];
+
+const newStudentSubjectPerformanceData = [
+  { subject: "Math", score: 0 },
+  { subject: "Science", score: 0 },
+  { subject: "History", score: 0 },
+  { subject: "English", score: 0 },
+  { subject: "Art", score: 0 },
 ];
 
 const subjectPerformanceChartConfig = {
@@ -24,7 +33,9 @@ const subjectPerformanceChartConfig = {
   },
 } satisfies ChartConfig;
 
-export function SubjectPerformanceChart() {
+export function SubjectPerformanceChart({ userName }: { userName: string }) {
+  const isSanjay = userName.toLowerCase() === 'sanjay sharma' || userName === 'teacher';
+  const data = isSanjay ? sanjaySubjectPerformanceData : newStudentSubjectPerformanceData;
   return (
     <Card>
       <CardHeader>
@@ -32,7 +43,7 @@ export function SubjectPerformanceChart() {
       </CardHeader>
       <CardContent>
         <ChartContainer config={subjectPerformanceChartConfig} className="h-64 w-full">
-          <BarChart accessibilityLayer data={subjectPerformanceData}>
+          <BarChart accessibilityLayer data={data}>
             <XAxis
               dataKey="subject"
               tickLine={false}
@@ -56,13 +67,22 @@ export function SubjectPerformanceChart() {
   );
 }
 
-const progressData = [
+const sanjayProgressData = [
     { month: "Jan", score: 65 },
     { month: "Feb", score: 70 },
     { month: "Mar", score: 72 },
     { month: "Apr", score: 80 },
     { month: "May", score: 85 },
     { month: "Jun", score: 88 },
+];
+
+const newStudentProgressData = [
+    { month: "Jan", score: 0 },
+    { month: "Feb", score: 0 },
+    { month: "Mar", score: 0 },
+    { month: "Apr", score: 0 },
+    { month: "May", score: 0 },
+    { month: "Jun", score: 0 },
 ];
 
 const progressChartConfig = {
@@ -72,7 +92,9 @@ const progressChartConfig = {
     },
 } satisfies ChartConfig;
 
-export function ProgressChart() {
+export function ProgressChart({ userName }: { userName: string }) {
+    const isSanjay = userName.toLowerCase() === 'sanjay sharma' || userName === 'teacher';
+    const data = isSanjay ? sanjayProgressData : newStudentProgressData;
     return (
         <Card>
             <CardHeader>
@@ -82,7 +104,7 @@ export function ProgressChart() {
                 <ChartContainer config={progressChartConfig} className="h-64 w-full">
                     <LineChart
                         accessibilityLayer
-                        data={progressData}
+                        data={data}
                         margin={{
                             left: 12,
                             right: 12,
@@ -100,7 +122,7 @@ export function ProgressChart() {
                             axisLine={false}
                             tickMargin={8}
                             fontSize={12}
-                            domain={[50, 100]}
+                            domain={[0, 100]}
                         />
                         <ChartTooltip cursor={false} content={<ChartTooltipContent hideLabel />} />
                         <Line

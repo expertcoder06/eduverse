@@ -1,5 +1,4 @@
 
-
 "use client";
 
 import Image from 'next/image';
@@ -13,18 +12,18 @@ import {
 } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
-import { Download, PlusCircle, Upload, FileText, Video, BookOpen, Send } from 'lucide-react';
+import { Download, PlusCircle, Send } from 'lucide-react';
 import { useSearchParams } from 'next/navigation';
-import { Progress } from '@/components/ui/progress';
 import { Suspense, useState } from 'react';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger, DialogFooter, DialogClose } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/hooks/use-toast';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 export const dynamic = 'force-dynamic';
 
-const resources = {
+const initialResources = {
   notes: [
     { title: 'Calculus Cheat Sheet', subject: 'Math', image: 'https://picsum.photos/400/250?random=1', dataAiHint: 'math abstract' },
     { title: 'The Roman Republic', subject: 'History', image: 'https://picsum.photos/400/250?random=2', dataAiHint: 'ancient rome' },
@@ -43,6 +42,7 @@ const resources = {
     { title: 'Supply and Demand', subject: 'Economics', image: 'https://picsum.photos/400/250?random=9', dataAiHint: 'city market' },
   ],
 };
+
 
 type Resource = {
     title: string;
@@ -90,8 +90,103 @@ const ResourceCard = ({ resource }: { resource: Resource }) => {
     </Card>
 )};
 
+const UploadResourceDialog = ({ onUpload }: { onUpload: (resource: Resource, type: 'notes' | 'ebooks' | 'videos') => void }) => {
+    const { toast } = useToast();
+    const [open, setOpen] = useState(false);
+    
+    const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+        event.preventDefault();
+        const formData = new FormData(event.currentTarget);
+        const title = formData.get('title') as string;
+        const subject = formData.get('subject') as string;
+        const type = formData.get('type') as 'notes' | 'ebooks' | 'videos';
 
-const TeacherLibraryPage = () => (
+        if (!title || !subject || !type) {
+            toast({
+                title: "Missing Information",
+                description: "Please fill out all fields.",
+                variant: "destructive",
+            });
+            return;
+        }
+
+        const newResource: Resource = {
+            title,
+            subject,
+            image: `https://picsum.photos/400/250?random=${Math.floor(Math.random() * 1000)}`,
+            dataAiHint: 'new resource',
+        };
+
+        onUpload(newResource, type);
+        toast({
+            title: "Resource Uploaded!",
+            description: `"${title}" has been added to the library.`,
+        });
+        setOpen(false);
+    };
+
+    return (
+        <Dialog open={open} onOpenChange={setOpen}>
+            <DialogTrigger asChild>
+                <Button className="transition-transform transform hover:scale-105">
+                    <PlusCircle className="mr-2 h-4 w-4" />
+                    Upload New Resource
+                </Button>
+            </DialogTrigger>
+            <DialogContent>
+                <DialogHeader>
+                    <DialogTitle>Upload a New Resource</DialogTitle>
+                    <DialogDescription>
+                        Add a new learning material for your students.
+                    </DialogDescription>
+                </DialogHeader>
+                <form onSubmit={handleSubmit}>
+                    <div className="grid gap-4 py-4">
+                        <div className="grid grid-cols-4 items-center gap-4">
+                            <Label htmlFor="title" className="text-right">
+                                Title
+                            </Label>
+                            <Input id="title" name="title" placeholder="e.g., The French Revolution" className="col-span-3" />
+                        </div>
+                        <div className="grid grid-cols-4 items-center gap-4">
+                            <Label htmlFor="subject" className="text-right">
+                                Subject
+                            </Label>
+                            <Input id="subject" name="subject" placeholder="e.g., History" className="col-span-3" />
+                        </div>
+                        <div className="grid grid-cols-4 items-center gap-4">
+                            <Label htmlFor="type" className="text-right">
+                                Type
+                            </Label>
+                            <Select name="type">
+                                <SelectTrigger className="col-span-3">
+                                    <SelectValue placeholder="Select resource type" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    <SelectItem value="notes">Note</SelectItem>
+                                    <SelectItem value="ebooks">E-book</SelectItem>
+                                    <SelectItem value="videos">Video</SelectItem>
+                                </SelectContent>
+                            </Select>
+                        </div>
+                    </div>
+                    <DialogFooter>
+                         <DialogClose asChild>
+                            <Button type="button" variant="secondary">Cancel</Button>
+                        </DialogClose>
+                        <Button type="submit">
+                            <PlusCircle className="mr-2 h-4 w-4" />
+                            Add Resource
+                        </Button>
+                    </DialogFooter>
+                </form>
+            </DialogContent>
+        </Dialog>
+    );
+};
+
+
+const TeacherLibraryPage = ({ resources, onUpload }: { resources: typeof initialResources, onUpload: (resource: Resource, type: 'notes' | 'ebooks' | 'videos') => void }) => (
     <div className="space-y-6 animate-fade-in-up">
          <div className="flex items-center justify-between">
             <div>
@@ -102,60 +197,41 @@ const TeacherLibraryPage = () => (
                 Upload and manage course materials for your students.
             </p>
             </div>
-            <Button className="transition-transform transform hover:scale-105">
-            <PlusCircle className="mr-2 h-4 w-4" />
-            Upload New Resource
-            </Button>
+            <UploadResourceDialog onUpload={onUpload} />
         </div>
-        <div className="grid gap-6 md:grid-cols-2">
-            <Card className="transition-shadow hover:shadow-lg">
-                <CardHeader>
-                    <CardTitle>Upload New File</CardTitle>
-                    <CardDescription>Drag and drop files here or browse to upload.</CardDescription>
-                </CardHeader>
-                <CardContent>
-                    <div className="flex flex-col items-center justify-center gap-4 rounded-lg border-2 border-dashed py-16 text-center transition-colors hover:border-primary hover:bg-accent/50">
-                        <Upload className="h-12 w-12 text-muted-foreground" />
-                        <p className="text-muted-foreground">Drag & drop files or click to browse</p>
-                        <Button variant="outline">Browse Files</Button>
-                    </div>
-                </CardContent>
-            </Card>
-             <Card className="transition-shadow hover:shadow-lg">
-                <CardHeader>
-                    <CardTitle>Uploading Progress</CardTitle>
-                    <CardDescription>Track your active file uploads.</CardDescription>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                   <div className="space-y-2">
-                        <div className="flex justify-between items-center text-sm">
-                            <p className="flex items-center gap-2 font-medium"><FileText className="h-4 w-4" /> Chapter_5_Notes.pdf</p>
-                            <p>75%</p>
-                        </div>
-                        <Progress value={75} />
-                   </div>
-                    <div className="space-y-2">
-                        <div className="flex justify-between items-center text-sm">
-                            <p className="flex items-center gap-2 font-medium"><Video className="h-4 w-4" /> Lecture_12_Video.mp4</p>
-                            <p>33%</p>
-                        </div>
-                        <Progress value={33} />
-                   </div>
-                    <div className="space-y-2">
-                        <div className="flex justify-between items-center text-sm">
-                            <p className="flex items-center gap-2 font-medium"><BookOpen className="h-4 w-4" /> History_eBook.epub</p>
-                            <p>Completed</p>
-                        </div>
-                        <Progress value={100} />
-                   </div>
-                </CardContent>
-            </Card>
-        </div>
+        <Tabs defaultValue="notes" className="w-full">
+            <TabsList>
+            <TabsTrigger value="notes">Notes</TabsTrigger>
+            <TabsTrigger value="ebooks">E-books</TabsTrigger>
+            <TabsTrigger value="videos">Videos</TabsTrigger>
+            </TabsList>
+            <TabsContent value="notes" className="mt-6">
+            <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+                {resources.notes.map((res) => (
+                <ResourceCard key={res.title} resource={res} />
+                ))}
+            </div>
+            </TabsContent>
+            <TabsContent value="ebooks" className="mt-6">
+            <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+                {resources.ebooks.map((res) => (
+                <ResourceCard key={res.title} resource={res} />
+                ))}
+            </div>
+            </TabsContent>
+            <TabsContent value="videos" className="mt-6">
+            <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+                {resources.videos.map((res) => (
+                <ResourceCard key={res.title} resource={res} />
+                ))}
+            </div>
+            </TabsContent>
+        </Tabs>
     </div>
 )
 
 
-const StudentLibraryPage = () => {
+const StudentLibraryPage = ({resources}: {resources: typeof initialResources}) => {
     const { toast } = useToast();
     const [open, setOpen] = useState(false);
 
@@ -262,12 +338,20 @@ const StudentLibraryPage = () => {
 function LibraryContent() {
   const searchParams = useSearchParams();
   const role = searchParams.get('role');
+  const [resources, setResources] = useState(initialResources);
 
-  if (role === 'teacher') {
-      return <TeacherLibraryPage />
+  const handleUpload = (resource: Resource, type: 'notes' | 'ebooks' | 'videos') => {
+      setResources(prevResources => ({
+          ...prevResources,
+          [type]: [...prevResources[type], resource],
+      }));
   }
 
-  return <StudentLibraryPage />
+  if (role === 'teacher') {
+      return <TeacherLibraryPage resources={resources} onUpload={handleUpload} />
+  }
+
+  return <StudentLibraryPage resources={resources} />
 }
 
 
@@ -278,3 +362,5 @@ export default function LibraryPage() {
     </Suspense>
   )
 }
+
+    

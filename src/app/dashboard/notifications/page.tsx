@@ -1,3 +1,6 @@
+
+"use client";
+
 import {
   Card,
   CardContent,
@@ -7,6 +10,7 @@ import {
 } from '@/components/ui/card';
 import { Bell, Calendar, FileText, CheckCircle } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
+import { cn } from '@/lib/utils';
 
 const notifications = [
   {
@@ -48,12 +52,28 @@ const notifications = [
 ];
 
 export default function NotificationsPage() {
+
+  const handleDownload = (e: React.MouseEvent<HTMLAnchorElement>, title: string) => {
+    e.preventDefault();
+    const fileContent = `This is a dummy file for the notification: ${title}.\n\nIn a real application, this would be the actual assignment, grade report, or resource file.`;
+    const blob = new Blob([fileContent], { type: 'text/plain' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `${title.replace(/\s+/g, '_')}.txt`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+  };
+
+
   return (
     <div className="space-y-6">
       <div>
         <h1 className="text-3xl font-bold font-headline">Notifications</h1>
         <p className="text-muted-foreground">
-          Stay up-to-date with assignments, exams, and grades.
+          Stay up-to-date with assignments, exams, and grades. Click to download.
         </p>
       </div>
 
@@ -65,9 +85,14 @@ export default function NotificationsPage() {
         <CardContent>
           <div className="space-y-4">
             {notifications.map((notification) => (
-              <div
+              <a
                 key={notification.id}
-                className="flex items-start gap-4 rounded-lg border p-4 transition-colors hover:bg-secondary/50"
+                href="#"
+                onClick={(e) => handleDownload(e, notification.title)}
+                className={cn(
+                  "flex items-start gap-4 rounded-lg border p-4 transition-colors hover:bg-secondary/50 cursor-pointer",
+                  !notification.read && "font-semibold"
+                  )}
               >
                 {!notification.read && (
                     <div className="mt-1.5 h-2 w-2 shrink-0 rounded-full bg-accent" />
@@ -85,7 +110,7 @@ export default function NotificationsPage() {
                   </p>
                    <Badge variant="outline" className='mt-2'>{notification.category}</Badge>
                 </div>
-              </div>
+              </a>
             ))}
           </div>
         </CardContent>

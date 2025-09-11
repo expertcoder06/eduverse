@@ -12,10 +12,11 @@ import {
 } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
-import { Download, PlusCircle, Send } from 'lucide-react';
+import { Download, PlusCircle, Send, Trash2 } from 'lucide-react';
 import { useSearchParams } from 'next/navigation';
 import { Suspense, useState } from 'react';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger, DialogFooter, DialogClose } from '@/components/ui/dialog';
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
@@ -25,33 +26,34 @@ export const dynamic = 'force-dynamic';
 
 const initialResources = {
   notes: [
-    { title: 'Calculus Cheat Sheet', subject: 'Math', image: 'https://picsum.photos/400/250?random=1', dataAiHint: 'math abstract' },
-    { title: 'The Roman Republic', subject: 'History', image: 'https://picsum.photos/400/250?random=2', dataAiHint: 'ancient rome' },
-    { title: 'Intro to Photosynthesis', subject: 'Science', image: 'https://picsum.photos/400/250?random=3', dataAiHint: 'nature leaf' },
-    { title: 'Shakespearean Sonnets', subject: 'English', image: 'https://picsum.photos/400/250?random=4', dataAiHint: 'old book' },
+    { id: 1, title: 'Calculus Cheat Sheet', subject: 'Math', image: 'https://picsum.photos/400/250?random=1', dataAiHint: 'math abstract' },
+    { id: 2, title: 'The Roman Republic', subject: 'History', image: 'https://picsum.photos/400/250?random=2', dataAiHint: 'ancient rome' },
+    { id: 3, title: 'Intro to Photosynthesis', subject: 'Science', image: 'https://picsum.photos/400/250?random=3', dataAiHint: 'nature leaf' },
+    { id: 4, title: 'Shakespearean Sonnets', subject: 'English', image: 'https://picsum.photos/400/250?random=4', dataAiHint: 'old book' },
   ],
   ebooks: [
-    { title: 'Pride and Prejudice', subject: 'English', image: 'https://picsum.photos/seed/prejudice/400/250', dataAiHint: 'classic novel' },
-    { title: 'Calculus: A Modern Approach', subject: 'Math', image: 'https://picsum.photos/seed/calculus-book/400/250', dataAiHint: 'math textbook' },
-    { title: 'A Brief History of Time', subject: 'Physics', image: 'https://picsum.photos/400/250?random=5', dataAiHint: 'space galaxy' },
-    { title: 'The Elements of Style', subject: 'English', image: 'https://picsum.photos/400/250?random=6', dataAiHint: 'writing typography' },
-    { title: 'Cosmos', subject: 'Astronomy', image: 'https://picsum.photos/400/250?random=7', dataAiHint: 'stars night' },
+    { id: 5, title: 'Pride and Prejudice', subject: 'English', image: 'https://picsum.photos/seed/prejudice/400/250', dataAiHint: 'classic novel' },
+    { id: 6, title: 'Calculus: A Modern Approach', subject: 'Math', image: 'https://picsum.photos/seed/calculus-book/400/250', dataAiHint: 'math textbook' },
+    { id: 7, title: 'A Brief History of Time', subject: 'Physics', image: 'https://picsum.photos/400/250?random=5', dataAiHint: 'space galaxy' },
+    { id: 8, title: 'The Elements of Style', subject: 'English', image: 'https://picsum.photos/400/250?random=6', dataAiHint: 'writing typography' },
+    { id: 9, title: 'Cosmos', subject: 'Astronomy', image: 'https://picsum.photos/400/250?random=7', dataAiHint: 'stars night' },
   ],
   videos: [
-    { title: 'Organic Chemistry Basics', subject: 'Chemistry', image: 'https://picsum.photos/400/250?random=8', dataAiHint: 'science lab' },
-    { title: 'Supply and Demand', subject: 'Economics', image: 'https://picsum.photos/400/250?random=9', dataAiHint: 'city market' },
+    { id: 10, title: 'Organic Chemistry Basics', subject: 'Chemistry', image: 'https://picsum.photos/400/250?random=8', dataAiHint: 'science lab' },
+    { id: 11, title: 'Supply and Demand', subject: 'Economics', image: 'https://picsum.photos/400/250?random=9', dataAiHint: 'city market' },
   ],
 };
 
 
 type Resource = {
+    id: number;
     title: string;
     subject: string;
     image: string;
     dataAiHint: string;
 }
 
-const ResourceCard = ({ resource }: { resource: Resource }) => {
+const ResourceCard = ({ resource, role, onDelete }: { resource: Resource, role?: string, onDelete?: (id: number) => void }) => {
   const handleDownload = () => {
     const fileContent = `This is a dummy file for ${resource.title}.\n\nIn a real application, this would be the actual resource file.`;
     const blob = new Blob([fileContent], { type: 'text/plain' });
@@ -81,16 +83,38 @@ const ResourceCard = ({ resource }: { resource: Resource }) => {
             <CardTitle className="text-lg">{resource.title}</CardTitle>
             <CardDescription>{resource.subject}</CardDescription>
         </CardContent>
-        <CardFooter className='p-4 pt-0'>
+        <CardFooter className='p-4 pt-0 flex gap-2'>
             <Button variant="outline" className="w-full" onClick={handleDownload}>
                 <Download className="mr-2 h-4 w-4" />
                 Download
             </Button>
+             {role === 'teacher' && onDelete && (
+                 <AlertDialog>
+                    <AlertDialogTrigger asChild>
+                        <Button variant="destructive" className="w-full">
+                            <Trash2 className="mr-2 h-4 w-4" />
+                            Delete
+                        </Button>
+                    </AlertDialogTrigger>
+                    <AlertDialogContent>
+                        <AlertDialogHeader>
+                        <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+                        <AlertDialogDescription>
+                            This action cannot be undone. This will permanently delete the resource "{resource.title}".
+                        </AlertDialogDescription>
+                        </AlertDialogHeader>
+                        <AlertDialogFooter>
+                        <AlertDialogCancel>Cancel</AlertDialogCancel>
+                        <AlertDialogAction onClick={() => onDelete(resource.id)}>Delete</AlertDialogAction>
+                        </AlertDialogFooter>
+                    </AlertDialogContent>
+                </AlertDialog>
+            )}
         </CardFooter>
     </Card>
 )};
 
-const UploadResourceDialog = ({ onUpload }: { onUpload: (resource: Resource, type: 'notes' | 'ebooks' | 'videos') => void }) => {
+const UploadResourceDialog = ({ onUpload }: { onUpload: (resource: Omit<Resource, 'id'>, type: 'notes' | 'ebooks' | 'videos') => void }) => {
     const { toast } = useToast();
     const [open, setOpen] = useState(false);
     
@@ -110,7 +134,7 @@ const UploadResourceDialog = ({ onUpload }: { onUpload: (resource: Resource, typ
             return;
         }
 
-        const newResource: Resource = {
+        const newResource: Omit<Resource, 'id'> = {
             title,
             subject,
             image: `https://picsum.photos/400/250?random=${Math.floor(Math.random() * 1000)}`,
@@ -192,7 +216,7 @@ const UploadResourceDialog = ({ onUpload }: { onUpload: (resource: Resource, typ
 };
 
 
-const TeacherLibraryPage = ({ resources, onUpload }: { resources: typeof initialResources, onUpload: (resource: Resource, type: 'notes' | 'ebooks' | 'videos') => void }) => (
+const TeacherLibraryPage = ({ resources, onUpload, onDelete }: { resources: typeof initialResources, onUpload: (resource: Omit<Resource, 'id'>, type: 'notes' | 'ebooks' | 'videos') => void, onDelete: (id: number, type: 'notes' | 'ebooks' | 'videos') => void }) => (
     <div className="space-y-6 animate-fade-in-up">
          <div className="flex items-center justify-between">
             <div>
@@ -214,21 +238,21 @@ const TeacherLibraryPage = ({ resources, onUpload }: { resources: typeof initial
             <TabsContent value="notes" className="mt-6">
             <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
                 {resources.notes.map((res) => (
-                <ResourceCard key={res.title} resource={res} />
+                <ResourceCard key={res.id} resource={res} role="teacher" onDelete={(id) => onDelete(id, 'notes')} />
                 ))}
             </div>
             </TabsContent>
             <TabsContent value="ebooks" className="mt-6">
             <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
                 {resources.ebooks.map((res) => (
-                <ResourceCard key={res.title} resource={res} />
+                <ResourceCard key={res.id} resource={res} role="teacher" onDelete={(id) => onDelete(id, 'ebooks')} />
                 ))}
             </div>
             </TabsContent>
             <TabsContent value="videos" className="mt-6">
             <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
                 {resources.videos.map((res) => (
-                <ResourceCard key={res.title} resource={res} />
+                <ResourceCard key={res.id} resource={res} role="teacher" onDelete={(id) => onDelete(id, 'videos')} />
                 ))}
             </div>
             </TabsContent>
@@ -318,21 +342,21 @@ const StudentLibraryPage = ({resources}: {resources: typeof initialResources}) =
             <TabsContent value="notes" className="mt-6">
             <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
                 {resources.notes.map((res) => (
-                <ResourceCard key={res.title} resource={res} />
+                <ResourceCard key={res.id} resource={res} />
                 ))}
             </div>
             </TabsContent>
             <TabsContent value="ebooks" className="mt-6">
             <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
                 {resources.ebooks.map((res) => (
-                <ResourceCard key={res.title} resource={res} />
+                <ResourceCard key={res.id} resource={res} />
                 ))}
             </div>
             </TabsContent>
             <TabsContent value="videos" className="mt-6">
             <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
                 {resources.videos.map((res) => (
-                <ResourceCard key={res.title} resource={res} />
+                <ResourceCard key={res.id} resource={res} />
                 ))}
             </div>
             </TabsContent>
@@ -345,16 +369,31 @@ function LibraryContent() {
   const searchParams = useSearchParams();
   const role = searchParams.get('role');
   const [resources, setResources] = useState(initialResources);
+  const { toast } = useToast();
 
-  const handleUpload = (resource: Resource, type: 'notes' | 'ebooks' | 'videos') => {
+  const handleUpload = (resource: Omit<Resource, 'id'>, type: 'notes' | 'ebooks' | 'videos') => {
       setResources(prevResources => ({
           ...prevResources,
-          [type]: [...prevResources[type], resource],
+          [type]: [...prevResources[type], { ...resource, id: Date.now() }],
       }));
   }
 
+  const handleDelete = (id: number, type: 'notes' | 'ebooks' | 'videos') => {
+      setResources(prevResources => {
+          const updatedResources = prevResources[type].filter(res => res.id !== id);
+          return {
+              ...prevResources,
+              [type]: updatedResources,
+          }
+      });
+      toast({
+        title: "Resource Deleted",
+        description: "The resource has been successfully removed.",
+      });
+  }
+
   if (role === 'teacher') {
-      return <TeacherLibraryPage resources={resources} onUpload={handleUpload} />
+      return <TeacherLibraryPage resources={resources} onUpload={handleUpload} onDelete={handleDelete} />
   }
 
   return <StudentLibraryPage resources={resources} />
@@ -368,3 +407,5 @@ export default function LibraryPage() {
     </Suspense>
   )
 }
+
+    

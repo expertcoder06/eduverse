@@ -138,3 +138,5 @@ export function ProgressChart({ userName }: { userName: string }) {
         </Card>
     )
 }
+
+    

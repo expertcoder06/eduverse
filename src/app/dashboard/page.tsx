@@ -25,7 +25,10 @@ import {
   UserCheck,
   CheckCircle,
   FileText,
-  Send
+  Send,
+  Loader2,
+  Sparkles,
+  Swords
 } from 'lucide-react';
 import { ProgressChart, SubjectPerformanceChart } from '@/components/performance-charts';
 import { useSearchParams } from 'next/navigation';
@@ -36,6 +39,8 @@ import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
 import { Checkbox } from '@/components/ui/checkbox';
+import { Input } from '@/components/ui/input';
+import { generateQuizQuestions, QuizQuestion } from '@/ai/flows/generate-quiz-questions';
 
 
 const teacherClasses = [
@@ -174,6 +179,137 @@ const AnnouncementDialog = () => {
     )
 }
 
+const CreateQuizDialog = () => {
+    const { toast } = useToast();
+    const [open, setOpen] = useState(false);
+    const [subject, setSubject] = useState('');
+    const [questions, setQuestions] = useState<QuizQuestion[]>([]);
+    const [isLoading, setIsLoading] = useState(false);
+
+    const handleGenerateQuiz = async () => {
+        if (subject.trim().length < 3) {
+            toast({
+                title: 'Invalid Subject',
+                description: 'Please enter a subject with at least 3 characters.',
+                variant: 'destructive',
+            });
+            return;
+        }
+        setIsLoading(true);
+        setQuestions([]);
+        try {
+            const result = await generateQuizQuestions({ subject });
+            if (result.questions && result.questions.length > 0) {
+                setQuestions(result.questions);
+            } else {
+                throw new Error('No questions were generated.');
+            }
+        } catch (error) {
+            console.error(error);
+            toast({
+                title: 'Failed to Generate Quiz',
+                description: 'There was an issue creating your quiz. Please try another subject.',
+                variant: 'destructive',
+            });
+        } finally {
+            setIsLoading(false);
+        }
+    };
+    
+    const handleShareQuiz = () => {
+        // In a real app, you would have logic to save this quiz and make it available.
+        // For now, we'll simulate sharing with a toast and by adding a notification.
+        const notification = {
+            id: Date.now() + Math.random(),
+            icon: 'Swords',
+            title: `New Quiz Available: ${subject}`,
+            description: `A new quiz on "${subject}" has been shared by your teacher.`,
+            time: 'Just now',
+            read: false,
+            category: 'Assignment'
+        };
+        const existingNotifications = JSON.parse(localStorage.getItem('notifications') || '[]');
+        localStorage.setItem('notifications', JSON.stringify([notification, ...existingNotifications]));
+
+        toast({
+            title: "Quiz Shared!",
+            description: `The quiz on "${subject}" has been sent to all students.`,
+        });
+        
+        // Reset state and close dialog
+        setSubject('');
+        setQuestions([]);
+        setOpen(false);
+    };
+
+    return (
+        <Dialog open={open} onOpenChange={setOpen}>
+            <DialogTrigger asChild>
+                <Button variant="outline">Create Quiz</Button>
+            </DialogTrigger>
+            <DialogContent className="sm:max-w-2xl">
+                <DialogHeader>
+                    <DialogTitle>Create a New Quiz</DialogTitle>
+                    <DialogDescription>
+                        Generate a 5-question multiple-choice quiz on any subject using AI.
+                    </DialogDescription>
+                </DialogHeader>
+                <div className="py-4">
+                    {!questions.length && !isLoading && (
+                        <div className="flex gap-2">
+                            <Input
+                                id="subject"
+                                placeholder="Enter a subject, e.g., 'World War II'"
+                                value={subject}
+                                onChange={(e) => setSubject(e.target.value)}
+                                className="h-11"
+                            />
+                            <Button onClick={handleGenerateQuiz} className="h-11">
+                                <Sparkles className="mr-2" />
+                                Generate
+                            </Button>
+                        </div>
+                    )}
+                    {isLoading && (
+                        <div className="flex flex-col items-center justify-center gap-2 text-muted-foreground">
+                            <Loader2 className="h-8 w-8 animate-spin" />
+                            <p>Generating your quiz on "{subject}"...</p>
+                        </div>
+                    )}
+                    {questions.length > 0 && !isLoading && (
+                         <div className="space-y-6 max-h-[50vh] overflow-y-auto pr-4">
+                            {questions.map((q, index) => (
+                                <div key={index} className="p-4 border rounded-lg bg-secondary/50">
+                                    <p className="font-semibold">{index + 1}. {q.questionText}</p>
+                                    <ul className="mt-2 space-y-1 text-sm text-muted-foreground">
+                                        {q.options.map(opt => (
+                                            <li key={opt} className={opt === q.correctAnswer ? 'text-green-600 font-medium' : ''}>
+                                                - {opt} {opt === q.correctAnswer && '(Correct)'}
+                                            </li>
+                                        ))}
+                                    </ul>
+                                </div>
+                            ))}
+                        </div>
+                    )}
+                </div>
+                {questions.length > 0 && !isLoading && (
+                    <DialogFooter>
+                        <Button variant="secondary" onClick={() => setQuestions([])}>
+                            <Sparkles className="mr-2" />
+                            Generate New Quiz
+                        </Button>
+                        <Button onClick={handleShareQuiz}>
+                            <Send className="mr-2" />
+                            Share with Students
+                        </Button>
+                    </DialogFooter>
+                )}
+            </DialogContent>
+        </Dialog>
+    );
+};
+
 
 const TeacherDashboard = ({userName}: {userName: string}) => {
     const getHref = (path: string) => `${path}?role=teacher`;
@@ -242,7 +378,7 @@ const TeacherDashboard = ({userName}: {userName: string}) => {
                     </CardHeader>
                     <CardContent className="flex-grow grid grid-cols-2 gap-3">
                        <AnnouncementDialog />
-                       <Button variant="outline">Create Quiz</Button>
+                       <CreateQuizDialog />
                        <Button variant="outline">Upload Resource</Button>
                        <Button variant="outline">Schedule Meeting</Button>
                     </CardContent>
@@ -524,6 +660,8 @@ export default function Dashboard() {
     </Suspense>
   )
 }
+
+    
 
     
 

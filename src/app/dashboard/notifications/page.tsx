@@ -1,4 +1,5 @@
 
+
 "use client";
 
 import {
@@ -8,7 +9,7 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
-import { Bell, Calendar, FileText, CheckCircle, MessageSquare } from 'lucide-react';
+import { Bell, Calendar, FileText, CheckCircle, MessageSquare, Swords } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
 import { useEffect, useState } from 'react';
@@ -57,6 +58,7 @@ const iconMap = {
     Calendar,
     CheckCircle,
     MessageSquare,
+    Swords,
 } as const;
 
 type Notification = {
@@ -80,7 +82,13 @@ export default function NotificationsPage() {
     setNotifications(prev => {
       const existingIds = new Set(prev.map(n => n.id));
       const newNotifications = storedNotifications.filter((n: Notification) => !existingIds.has(n.id));
-      return [...newNotifications, ...prev];
+      // Sort by time, assuming 'Just now' is the newest
+      const sortedNotifications = [...newNotifications, ...prev].sort((a, b) => {
+        if (a.time === 'Just now' && b.time !== 'Just now') return -1;
+        if (b.time === 'Just now' && a.time !== 'Just now') return 1;
+        return 0; // Keep original order for others for simplicity
+      });
+      return sortedNotifications;
     });
 
   }, []);
@@ -153,5 +161,7 @@ export default function NotificationsPage() {
     </div>
   );
 }
+
+    
 
     

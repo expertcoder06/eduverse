@@ -49,45 +49,44 @@ export default function LoginPage() {
             throw new Error("Firestore is not initialized");
         }
         
-        const usersRef = collection(db, "users");
-        const q = query(usersRef, where("email", "==", email));
-        const querySnapshot = await getDocs(q);
+        const collectionsToSearch = ["student", "teacher", "parent"];
+        let userFound = false;
+        
+        for (const collectionName of collectionsToSearch) {
+            if (userFound) break;
 
-        if (querySnapshot.empty) {
-            toast({
-                title: 'Login Failed',
-                description: 'No user found with this email.',
-                variant: 'destructive',
-            });
-            setIsLoading(false);
-            return;
+            const usersRef = collection(db, collectionName);
+            const q = query(usersRef, where("email", "==", email));
+            const querySnapshot = await getDocs(q);
+
+            if (!querySnapshot.empty) {
+                querySnapshot.forEach((doc) => {
+                     const user = doc.data();
+                     // In a real app, you would hash and compare the password.
+                     // For this demo, we'll just check if the stored password matches.
+                     if (user.password === password) {
+                        userFound = true;
+                        toast({
+                            title: 'Login Successful!',
+                            description: `Welcome back, ${user.name}. Redirecting...`,
+                        });
+                        
+                        // Store user info in localStorage
+                        if (typeof window !== 'undefined') {
+                            localStorage.setItem('user', JSON.stringify({ name: user.name, role: user.role, email: user.email }));
+                        }
+
+                        router.push(`/dashboard?role=${user.role}`);
+                     }
+                });
+            }
         }
 
-        let userFound = false;
-        querySnapshot.forEach((doc) => {
-             const user = doc.data();
-             // In a real app, you would hash and compare the password.
-             // For this demo, we'll just check if the stored password matches.
-             if (user.password === password) {
-                userFound = true;
-                toast({
-                    title: 'Login Successful!',
-                    description: `Welcome back, ${user.name}. Redirecting...`,
-                });
-                
-                // Store user info in localStorage
-                if (typeof window !== 'undefined') {
-                    localStorage.setItem('user', JSON.stringify({ name: user.name, role: user.role, email: user.email }));
-                }
-
-                router.push(`/dashboard?role=${user.role}`);
-             }
-        });
 
         if (!userFound) {
              toast({
                 title: 'Login Failed',
-                description: 'Incorrect password. Please try again.',
+                description: 'Incorrect email or password. Please try again.',
                 variant: 'destructive',
             });
         }

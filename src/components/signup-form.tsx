@@ -75,12 +75,22 @@ export function SignUpForm({ onSubmitted }: SignUpFormProps) {
       // For this demo, we'll store the password directly.
       // In a real production app, you should ALWAYS hash the password.
       const { confirmPassword, ...userData } = values;
-      await addDoc(collection(db, "users"), userData);
+      
+      // Determine collection based on role
+      const collectionName = values.role;
+
+      await addDoc(collection(db, collectionName), userData);
       
       toast({
         title: "Account Created!",
         description: "Welcome to EduVerse. You are now being redirected.",
       });
+
+      // Store user info in localStorage
+      if (typeof window !== 'undefined') {
+          localStorage.setItem('user', JSON.stringify({ name: values.name, role: values.role, email: values.email }));
+      }
+
       onSubmitted();
       router.push(`/dashboard?role=${values.role}`);
     } catch (error) {

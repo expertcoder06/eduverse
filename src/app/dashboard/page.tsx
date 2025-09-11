@@ -71,7 +71,7 @@ const AnnouncementDialog = () => {
 
         const newAnnouncement = {
             id: Date.now(),
-            icon: MessageSquare,
+            icon: 'MessageSquare',
             title: 'New Announcement from Teacher',
             description: message,
             time: 'Just now',

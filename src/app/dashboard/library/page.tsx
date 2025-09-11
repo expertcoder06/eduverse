@@ -13,10 +13,15 @@ import {
 } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
-import { Download, PlusCircle, Upload, FileText, Video, BookOpen } from 'lucide-react';
+import { Download, PlusCircle, Upload, FileText, Video, BookOpen, Send } from 'lucide-react';
 import { useSearchParams } from 'next/navigation';
 import { Progress } from '@/components/ui/progress';
-import { Suspense } from 'react';
+import { Suspense, useState } from 'react';
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger, DialogFooter, DialogClose } from '@/components/ui/dialog';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
+import { useToast } from '@/hooks/use-toast';
 export const dynamic = 'force-dynamic';
 
 const resources = {
@@ -150,52 +155,109 @@ const TeacherLibraryPage = () => (
 )
 
 
-const StudentLibraryPage = () => (
- <div className="space-y-6 animate-fade-in-up">
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-3xl font-bold font-headline">
-            Resource Library
-          </h1>
-          <p className="text-muted-foreground">
-            Access notes, e-books, and video lectures.
-          </p>
+const StudentLibraryPage = () => {
+    const { toast } = useToast();
+    const [open, setOpen] = useState(false);
+
+    const handleRequestSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+        event.preventDefault();
+        toast({
+            title: "Request Sent!",
+            description: "Your resource request has been sent to your teachers.",
+        });
+        setOpen(false);
+    }
+    
+    return (
+    <div className="space-y-6 animate-fade-in-up">
+        <div className="flex items-center justify-between">
+            <div>
+            <h1 className="text-3xl font-bold font-headline">
+                Resource Library
+            </h1>
+            <p className="text-muted-foreground">
+                Access notes, e-books, and video lectures.
+            </p>
+            </div>
+            <Dialog open={open} onOpenChange={setOpen}>
+                <DialogTrigger asChild>
+                    <Button>
+                        <PlusCircle className="mr-2 h-4 w-4" />
+                        Request a Resource
+                    </Button>
+                </DialogTrigger>
+                <DialogContent>
+                    <DialogHeader>
+                        <DialogTitle>Request a New Resource</DialogTitle>
+                        <DialogDescription>
+                            Can't find what you're looking for? Let your teachers know what you need.
+                        </DialogDescription>
+                    </DialogHeader>
+                    <form onSubmit={handleRequestSubmit}>
+                        <div className="grid gap-4 py-4">
+                            <div className="grid grid-cols-4 items-center gap-4">
+                                <Label htmlFor="subject" className="text-right">
+                                    Subject
+                                </Label>
+                                <Input id="subject" defaultValue="History" className="col-span-3" />
+                            </div>
+                             <div className="grid grid-cols-4 items-center gap-4">
+                                <Label htmlFor="title" className="text-right">
+                                    Title
+                                </Label>
+                                <Input id="title" placeholder="e.g., Video on the French Revolution" className="col-span-3" />
+                            </div>
+                            <div className="grid grid-cols-4 items-center gap-4">
+                                <Label htmlFor="reason" className="text-right">
+                                    Reason
+                                </Label>
+                                <Textarea id="reason" placeholder="Why do you need this resource?" className="col-span-3" />
+                            </div>
+                        </div>
+                        <DialogFooter>
+                            <DialogClose asChild>
+                                <Button type="button" variant="secondary">Cancel</Button>
+                            </DialogClose>
+                            <Button type="submit">
+                                <Send className="mr-2 h-4 w-4" />
+                                Send Request
+                            </Button>
+                        </DialogFooter>
+                    </form>
+                </DialogContent>
+            </Dialog>
         </div>
-        <Button>
-          <PlusCircle className="mr-2 h-4 w-4" />
-          Request a Resource
-        </Button>
-      </div>
-    <Tabs defaultValue="notes" className="w-full">
-        <TabsList>
-        <TabsTrigger value="notes">Notes</TabsTrigger>
-        <TabsTrigger value="ebooks">E-books</TabsTrigger>
-        <TabsTrigger value="videos">Videos</TabsTrigger>
-        </TabsList>
-        <TabsContent value="notes" className="mt-6">
-        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-            {resources.notes.map((res) => (
-            <ResourceCard key={res.title} resource={res} />
-            ))}
-        </div>
-        </TabsContent>
-        <TabsContent value="ebooks" className="mt-6">
-        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-            {resources.ebooks.map((res) => (
-            <ResourceCard key={res.title} resource={res} />
-            ))}
-        </div>
-        </TabsContent>
-        <TabsContent value="videos" className="mt-6">
-        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-            {resources.videos.map((res) => (
-            <ResourceCard key={res.title} resource={res} />
-            ))}
-        </div>
-        </TabsContent>
-    </Tabs>
-</div>
-)
+        <Tabs defaultValue="notes" className="w-full">
+            <TabsList>
+            <TabsTrigger value="notes">Notes</TabsTrigger>
+            <TabsTrigger value="ebooks">E-books</TabsTrigger>
+            <TabsTrigger value="videos">Videos</TabsTrigger>
+            </TabsList>
+            <TabsContent value="notes" className="mt-6">
+            <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+                {resources.notes.map((res) => (
+                <ResourceCard key={res.title} resource={res} />
+                ))}
+            </div>
+            </TabsContent>
+            <TabsContent value="ebooks" className="mt-6">
+            <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+                {resources.ebooks.map((res) => (
+                <ResourceCard key={res.title} resource={res} />
+                ))}
+            </div>
+            </TabsContent>
+            <TabsContent value="videos" className="mt-6">
+            <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+                {resources.videos.map((res) => (
+                <ResourceCard key={res.title} resource={res} />
+                ))}
+            </div>
+            </TabsContent>
+        </Tabs>
+    </div>
+    )
+}
 
 function LibraryContent() {
   const searchParams = useSearchParams();

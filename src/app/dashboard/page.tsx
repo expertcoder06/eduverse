@@ -28,7 +28,7 @@ import {
 import { ProgressChart, SubjectPerformanceChart } from '@/components/performance-charts';
 import { useSearchParams } from 'next/navigation';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Suspense } from 'react';
+import { Suspense, useEffect, useState } from 'react';
 
 
 const teacherClasses = [
@@ -50,13 +50,13 @@ const upcomingDeadlines = [
 ]
 
 
-const TeacherDashboard = () => {
+const TeacherDashboard = ({userName}: {userName: string}) => {
     const getHref = (path: string) => `${path}?role=teacher`;
     
     return (
         <div className="flex flex-col gap-6 animate-fade-in-up">
              <div>
-                <h1 className="text-3xl font-bold font-headline">Welcome back, Mrs. Davis!</h1>
+                <h1 className="text-3xl font-bold font-headline">Welcome back, {userName}!</h1>
                 <p className="text-muted-foreground">
                 Here’s what’s happening with your classes today.
                 </p>
@@ -147,12 +147,12 @@ const TeacherDashboard = () => {
     )
 }
 
-const ParentDashboard = () => {
+const ParentDashboard = ({userName}: {userName: string}) => {
     const getHref = (path: string) => `${path}?role=parent`;
      return (
         <div className="flex flex-col gap-6 animate-fade-in-up">
              <div>
-                <h1 className="text-3xl font-bold font-headline">Welcome, Mr. Smith!</h1>
+                <h1 className="text-3xl font-bold font-headline">Welcome, {userName}!</h1>
                 <p className="text-muted-foreground">
                 Here's an overview of Alex's progress and upcoming activities.
                 </p>
@@ -238,12 +238,12 @@ const ParentDashboard = () => {
 }
 
 
-const StudentDashboard = () => {
+const StudentDashboard = ({userName}: {userName: string}) => {
     const getHref = (path: string) => `/dashboard${path}?role=student`;
     return (
      <div className="flex flex-col gap-6 animate-fade-in-up">
       <div>
-        <h1 className="text-3xl font-bold font-headline">Welcome back, Alex!</h1>
+        <h1 className="text-3xl font-bold font-headline">Welcome back, {userName}!</h1>
         <p className="text-muted-foreground">
           Here's a snapshot of your academic world.
         </p>
@@ -366,16 +366,28 @@ const StudentDashboard = () => {
 function DashboardContent() {
   const searchParams = useSearchParams();
   const role = searchParams.get('role') || 'student';
+  const [userName, setUserName] = useState('User');
+
+  useEffect(() => {
+    // Ensure this runs only on the client
+    if (typeof window !== 'undefined') {
+      const storedUser = localStorage.getItem('user');
+      if (storedUser) {
+        const user = JSON.parse(storedUser);
+        setUserName(user.name);
+      }
+    }
+  }, []);
   
   if (role === 'teacher') {
-    return <TeacherDashboard />;
+    return <TeacherDashboard userName={userName}/>;
   }
 
   if (role === 'parent') {
-    return <ParentDashboard />;
+    return <ParentDashboard userName={userName}/>;
   }
   
-  return <StudentDashboard />;
+  return <StudentDashboard userName={userName}/>;
 }
 
 export default function Dashboard() {

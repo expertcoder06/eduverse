@@ -26,7 +26,7 @@ import {
   Video
 } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { useMemo } from 'react';
+import { useMemo, useState, useEffect } from 'react';
 
 const studentNav = [
   { href: '/dashboard', icon: LayoutDashboard, label: 'Dashboard' },
@@ -74,6 +74,18 @@ export function DashboardNav() {
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const role = searchParams.get('role');
+  const [userName, setUserName] = useState('');
+
+  useEffect(() => {
+    // Ensure this runs only on the client
+    if (typeof window !== 'undefined') {
+      const storedUser = localStorage.getItem('user');
+      if (storedUser) {
+        const user = JSON.parse(storedUser);
+        setUserName(user.name);
+      }
+    }
+  }, []);
 
   const navItems = useMemo(() => getNavItems(role), [role]);
   
@@ -117,11 +129,11 @@ export function DashboardNav() {
                     <Link href="/login">
                         <div className="flex w-full items-center gap-2">
                              <Avatar className="h-7 w-7">
-                                <AvatarImage src="https://picsum.photos/100" alt="Alex" data-ai-hint="person" />
-                                <AvatarFallback>A</AvatarFallback>
+                                <AvatarImage src="https://picsum.photos/100" alt={userName} data-ai-hint="person" />
+                                <AvatarFallback>{userName ? userName.charAt(0).toUpperCase() : 'U'}</AvatarFallback>
                             </Avatar>
                             <div className="flex flex-col text-left">
-                                <span className='text-sm font-semibold'>Alex Doe</span>
+                                <span className='text-sm font-semibold'>{userName || 'User'}</span>
                                 <span className='text-xs text-muted-foreground'>Logout</span>
                             </div>
                         </div>

@@ -74,6 +74,12 @@ export default function LoginPage() {
                     title: 'Login Successful!',
                     description: `Welcome back, ${user.name}. Redirecting...`,
                 });
+                
+                // Store user info in localStorage
+                if (typeof window !== 'undefined') {
+                    localStorage.setItem('user', JSON.stringify({ name: user.name, role: user.role, email: user.email }));
+                }
+
                 router.push(`/dashboard?role=${user.role}`);
              }
         });

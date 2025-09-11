@@ -1,7 +1,7 @@
 
 "use client";
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
@@ -31,6 +31,8 @@ import { CalendarIcon, Loader2, Lightbulb } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { format } from 'date-fns';
 import { useToast } from '@/hooks/use-toast';
+import { useSearchParams } from 'next/navigation';
+import { Suspense } from 'react';
 
 const formSchema = z.object({
   studentName: z.string().default('Alex'),
@@ -40,10 +42,21 @@ const formSchema = z.object({
   examDate: z.date({ required_error: 'Exam date is required.' }),
 });
 
-export default function MentorPage() {
+function MentorPageContent() {
   const [studyPlan, setStudyPlan] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [userName, setUserName] = useState('your child');
   const { toast } = useToast();
+  const searchParams = useSearchParams();
+  const role = searchParams.get('role');
+
+  useEffect(() => {
+    const storedUser = localStorage.getItem('user');
+    if (storedUser) {
+      const user = JSON.parse(storedUser);
+      setUserName(user.name);
+    }
+  }, []);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -54,6 +67,15 @@ export default function MentorPage() {
       weaknesses: 'Struggles with understanding the broader context and consequences of events.',
     },
   });
+  
+  useEffect(() => {
+    if (userName && role !== 'parent') {
+        form.setValue('studentName', userName);
+    } else if (userName && role === 'parent') {
+        form.setValue('studentName', "Alex"); // Assuming the child's name is Alex for parents
+    }
+  }, [userName, form, role]);
+
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     setIsLoading(true);
@@ -75,13 +97,19 @@ export default function MentorPage() {
       setIsLoading(false);
     }
   }
+  
+  const pageTitle = role === 'parent' ? "Create a Plan for Your Child" : "Virtual Mentor";
+  const pageDescription = role === 'parent' 
+    ? "Get a personalized study plan to help your child succeed."
+    : "Get a personalized study plan to help you succeed.";
+
 
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-3xl font-bold font-headline">Virtual Mentor</h1>
+        <h1 className="text-3xl font-bold font-headline">{pageTitle}</h1>
         <p className="text-muted-foreground">
-          Get a personalized study plan to help your student succeed.
+          {pageDescription}
         </p>
       </div>
 
@@ -220,4 +248,12 @@ export default function MentorPage() {
       </div>
     </div>
   );
+}
+
+export default function MentorPage() {
+    return (
+        <Suspense fallback={<div>Loading...</div>}>
+            <MentorPageContent />
+        </Suspense>
+    )
 }

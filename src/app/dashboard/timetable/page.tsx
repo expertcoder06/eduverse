@@ -1,6 +1,7 @@
+
 "use client";
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
@@ -42,7 +43,17 @@ const formSchema = z.object({
 export default function TimetablePage() {
   const [timetable, setTimetable] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [userName, setUserName] = useState('Alex');
   const { toast } = useToast();
+
+  useEffect(() => {
+    const storedUser = localStorage.getItem('user');
+    if (storedUser) {
+      const user = JSON.parse(storedUser);
+      setUserName(user.name);
+    }
+  }, []);
+
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -52,6 +63,12 @@ export default function TimetablePage() {
       preferredStudyTimes: 'Mornings and late afternoons',
     },
   });
+
+  useEffect(() => {
+    if (userName) {
+        form.setValue('studentName', userName);
+    }
+  }, [userName, form]);
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     setIsLoading(true);

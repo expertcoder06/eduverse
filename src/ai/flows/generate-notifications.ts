@@ -42,7 +42,7 @@ const prompt = ai.definePrompt({
   name: 'generateNotificationsPrompt',
   input: { schema: GenerateNotificationsInputSchema },
   output: { schema: GenerateNotificationsOutputSchema },
-  prompt: `You are an AI assistant for the EduVerse learning platform. Your task is to generate clear, concise, and helpful notifications for a student based on recent events.
+  prompt: `You are an AI assistant for the Pro Learning platform. Your task is to generate clear, concise, and helpful notifications for a student based on recent events.
 
   Student Name: {{{studentName}}}
   Recent Events:

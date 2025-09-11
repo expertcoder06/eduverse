@@ -112,7 +112,7 @@ export default function LoginPage() {
           <Logo />
         </Link>
           <CardTitle className="font-headline text-3xl font-bold text-primary">
-            Welcome to EduVerse
+            Welcome to Pro Learning
           </CardTitle>
           <CardDescription>
             The unified learning ecosystem. Sign in or create an account.

@@ -61,7 +61,7 @@ export default function ParentPage() {
         <div className="container flex h-14 items-center">
             <Link href="/" className="mr-6 flex items-center space-x-2">
                 <Logo />
-                <span className="font-bold sm:inline-block">EduVerse</span>
+                <span className="font-bold sm:inline-block">Pro Learning</span>
             </Link>
         </div>
       </header>
@@ -70,7 +70,7 @@ export default function ParentPage() {
         <section className="text-center">
           <h1 className="text-4xl md:text-5xl font-bold font-headline text-primary">Stay Connected to Your Child's Success</h1>
           <p className="mt-4 text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto">
-            The EduVerse Parent Dashboard offers a transparent window into your child's academic world, helping you support them every step of the way.
+            The Pro Learning Parent Dashboard offers a transparent window into your child's academic world, helping you support them every step of the way.
           </p>
           <Button asChild size="lg" className="mt-8 text-lg">
             <Link href="/login">Explore the Dashboard</Link>
@@ -104,7 +104,7 @@ export default function ParentPage() {
                 </div>
                 <Image
                     src="https://picsum.photos/seed/parent-benefit/600/400"
-                    alt="Parent and child using EduVerse"
+                    alt="Parent and child using Pro Learning"
                     width={600}
                     height={400}
                     className="rounded-lg shadow-xl"
@@ -180,7 +180,7 @@ export default function ParentPage() {
       </main>
        <footer className="border-t py-6">
             <div className="container text-center text-muted-foreground">
-            &copy; {new Date().getFullYear()} EduVerse. All rights reserved.
+            &copy; {new Date().getFullYear()} Pro Learning. All rights reserved.
             </div>
         </footer>
     </div>

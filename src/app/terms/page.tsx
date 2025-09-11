@@ -8,7 +8,7 @@ export default function TermsOfServicePage() {
        <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
         <div className="container flex h-14 items-center justify-between">
           <Link href="/" className="mr-6 flex items-center space-x-2">
-            <span className="font-bold sm:inline-block">EduVerse</span>
+            <span className="font-bold sm:inline-block">Pro Learning</span>
           </Link>
           <Link href="/login" className="text-sm font-medium text-muted-foreground hover:text-primary">
             Back to App
@@ -23,7 +23,7 @@ export default function TermsOfServicePage() {
           </CardHeader>
           <CardContent className="prose prose-sm dark:prose-invert max-w-none space-y-6">
             <p>
-              Please read these Terms of Service carefully before using the EduVerse platform. Your access to and use of the service is conditioned on your acceptance of and compliance with these Terms. These Terms apply to all visitors, users, and others who access or use the service.
+              Please read these Terms of Service carefully before using the Pro Learning platform. Your access to and use of the service is conditioned on your acceptance of and compliance with these Terms. These Terms apply to all visitors, users, and others who access or use the service.
             </p>
 
             <section>
@@ -43,7 +43,7 @@ export default function TermsOfServicePage() {
              <section>
               <h2 className="text-2xl font-semibold">3. Acceptable Use</h2>
               <p>
-                You agree not to use the service in any way that is unlawful, or harms EduVerse, its service providers, its suppliers, or any other user. You agree not to use the service in any way that breaches any code of conduct, policy or other notice on the service.
+                You agree not to use the service in any way that is unlawful, or harms Pro Learning, its service providers, its suppliers, or any other user. You agree not to use the service in any way that breaches any code of conduct, policy or other notice on the service.
               </p>
             </section>
 

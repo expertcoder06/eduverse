@@ -8,7 +8,7 @@ export default function PrivacyPolicyPage() {
       <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
         <div className="container flex h-14 items-center justify-between">
           <Link href="/" className="mr-6 flex items-center space-x-2">
-            <span className="font-bold sm:inline-block">EduVerse</span>
+            <span className="font-bold sm:inline-block">Pro Learning</span>
           </Link>
           <Link href="/login" className="text-sm font-medium text-muted-foreground hover:text-primary">
             Back to App
@@ -23,7 +23,7 @@ export default function PrivacyPolicyPage() {
           </CardHeader>
           <CardContent className="prose prose-sm dark:prose-invert max-w-none space-y-6">
             <p>
-              Welcome to EduVerse. We are committed to protecting your privacy and handling your data in an open and transparent manner. This privacy policy explains how we collect, use, and share information about you when you use our platform.
+              Welcome to Pro Learning. We are committed to protecting your privacy and handling your data in an open and transparent manner. This privacy policy explains how we collect, use, and share information about you when you use our platform.
             </p>
 
             <section>

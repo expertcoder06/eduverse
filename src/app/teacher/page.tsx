@@ -61,7 +61,7 @@ export default function TeacherPage() {
         <div className="container flex h-14 items-center">
             <Link href="/" className="mr-6 flex items-center space-x-2">
                 <Logo />
-                <span className="font-bold sm:inline-block">EduVerse</span>
+                <span className="font-bold sm:inline-block">Pro Learning</span>
             </Link>
         </div>
       </header>
@@ -70,7 +70,7 @@ export default function TeacherPage() {
         <section className="text-center">
           <h1 className="text-4xl md:text-5xl font-bold font-headline text-primary">A Smarter Way to Teach</h1>
           <p className="mt-4 text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto">
-            EduVerse streamlines classroom management, saving you time and providing powerful insights to help your students succeed.
+            Pro Learning streamlines classroom management, saving you time and providing powerful insights to help your students succeed.
           </p>
            <Button asChild size="lg" className="mt-8 text-lg">
             <Link href="/login">Get Started</Link>
@@ -92,7 +92,7 @@ export default function TeacherPage() {
             <div className="grid md:grid-cols-2 gap-12 items-center">
                 <Image
                     src="https://picsum.photos/seed/teacher-benefit/600/400"
-                    alt="Teacher using EduVerse dashboard"
+                    alt="Teacher using Pro Learning dashboard"
                     width={600}
                     height={400}
                     className="rounded-lg shadow-xl"
@@ -143,7 +143,7 @@ export default function TeacherPage() {
             <Card className="bg-secondary/50">
                 <CardContent className="pt-6">
                     <blockquote className="text-center text-xl md:text-2xl font-semibold italic text-foreground">
-                       "EduVerse has cut my administrative work in half. I can now spend more time creating engaging lessons and less time on paperwork. The performance analytics are a game-changer!"
+                       "Pro Learning has cut my administrative work in half. I can now spend more time creating engaging lessons and less time on paperwork. The performance analytics are a game-changer!"
                     </blockquote>
                     <p className="text-center mt-4 text-muted-foreground">— Mrs. Davis, High School Teacher</p>
                 </CardContent>
@@ -180,7 +180,7 @@ export default function TeacherPage() {
       </main>
        <footer className="border-t py-6">
             <div className="container text-center text-muted-foreground">
-            &copy; {new Date().getFullYear()} EduVerse. All rights reserved.
+            &copy; {new Date().getFullYear()} Pro Learning. All rights reserved.
             </div>
         </footer>
     </div>

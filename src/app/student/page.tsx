@@ -70,7 +70,7 @@ export default function StudentPage() {
         <div className="container flex h-14 items-center">
             <Link href="/" className="mr-6 flex items-center space-x-2">
                 <Logo />
-                <span className="font-bold sm:inline-block">EduVerse</span>
+                <span className="font-bold sm:inline-block">Pro Learning</span>
             </Link>
         </div>
       </header>
@@ -80,7 +80,7 @@ export default function StudentPage() {
         <section className="text-center">
           <h1 className="text-4xl md:text-5xl font-bold font-headline text-primary">Empower Your Learning Journey</h1>
           <p className="mt-4 text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto">
-            EduVerse provides students with AI-powered tools, personalized tracking, and engaging rewards to make learning more effective and fun.
+            Pro Learning provides students with AI-powered tools, personalized tracking, and engaging rewards to make learning more effective and fun.
           </p>
           <Button asChild size="lg" className="mt-8 text-lg">
             <Link href="/login">Get Started</Link>
@@ -113,7 +113,7 @@ export default function StudentPage() {
                 </div>
                 <Image
                     src="https://picsum.photos/seed/student-benefit/600/400"
-                    alt="Student benefiting from EduVerse"
+                    alt="Student benefiting from Pro Learning"
                     width={600}
                     height={400}
                     className="rounded-lg shadow-xl"
@@ -161,7 +161,7 @@ export default function StudentPage() {
             <Card className="bg-secondary/50">
                 <CardContent className="pt-6">
                     <blockquote className="text-center text-xl md:text-2xl font-semibold italic text-foreground">
-                       "Using EduVerse has completely changed how I study. The AI mentor helped me improve my history grades by 20% in just one month! It's like having a personal tutor."
+                       "Using Pro Learning has completely changed how I study. The AI mentor helped me improve my history grades by 20% in just one month! It's like having a personal tutor."
                     </blockquote>
                     <p className="text-center mt-4 text-muted-foreground">— Alex, 10th Grade</p>
                 </CardContent>
@@ -197,7 +197,7 @@ export default function StudentPage() {
 
         <footer className="border-t py-6">
             <div className="container text-center text-muted-foreground">
-            &copy; {new Date().getFullYear()} EduVerse. All rights reserved.
+            &copy; {new Date().getFullYear()} Pro Learning. All rights reserved.
             </div>
         </footer>
     </div>

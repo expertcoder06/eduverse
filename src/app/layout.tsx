@@ -5,7 +5,7 @@ import type { ReactNode } from 'react';
 import { ThemeProvider } from 'next-themes';
 
 export const metadata: Metadata = {
-  title: 'EduVerse',
+  title: 'Pro Learning',
   description: 'The unified learning ecosystem.',
 };
 

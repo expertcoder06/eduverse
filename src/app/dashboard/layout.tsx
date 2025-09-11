@@ -21,7 +21,7 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
         <SidebarHeader>
           <div className="flex items-center gap-2">
             <Logo />
-            <span className="text-lg font-semibold font-headline text-primary">EduVerse</span>
+            <span className="text-lg font-semibold font-headline text-primary">Pro Learning</span>
           </div>
         </SidebarHeader>
         <SidebarContent>

@@ -83,7 +83,7 @@ export function SignUpForm({ onSubmitted }: SignUpFormProps) {
       
       toast({
         title: "Account Created!",
-        description: "Welcome to EduVerse. You are now being redirected.",
+        description: "Welcome to Pro Learning. You are now being redirected.",
       });
 
       // Store user info in localStorage

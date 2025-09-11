@@ -110,7 +110,7 @@ export default function LandingPage() {
                     <DialogHeader>
                       <DialogTitle>Create an Account</DialogTitle>
                       <DialogDescription>
-                        Join EduVerse today and start your journey towards smarter learning.
+                        Join Pro Learning today and start your journey towards smarter learning.
                       </DialogDescription>
                     </DialogHeader>
                     <SignUpForm onSubmitted={() => setOpen(false)} />
@@ -225,7 +225,7 @@ export default function LandingPage() {
          <section id="why-choose-us" className="py-20 px-4 bg-background/50">
             <div className="container mx-auto text-center">
                 <div className="animate-fade-in-up">
-                    <h2 className="text-3xl md:text-4xl font-bold mb-12 font-headline">Why Choose EduVerse?</h2>
+                    <h2 className="text-3xl md:text-4xl font-bold mb-12 font-headline">Why Choose Pro Learning?</h2>
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
                     {whyChooseUsFeatures.map((feature, index) => (
@@ -321,7 +321,7 @@ export default function LandingPage() {
 
        <footer className="py-8 px-4 border-t border-white/10 bg-background/50">
             <div className="container mx-auto flex flex-col md:flex-row justify-between items-center text-center md:text-left">
-                <p className="text-muted-foreground">&copy; {new Date().getFullYear()} EduVerse. All rights reserved.</p>
+                <p className="text-muted-foreground">&copy; {new Date().getFullYear()} Pro Learning. All rights reserved.</p>
                 <div className="flex gap-6 mt-4 md:mt-0">
                     <Link href="/about" className="text-muted-foreground hover:text-primary transition-colors animate-fade-in-up" style={{animationDelay: '200ms'}}>About</Link>
                     <Link href="/contact" className="text-muted-foreground hover:text-primary transition-colors animate-fade-in-up" style={{animationDelay: '300ms'}}>Contact</Link>

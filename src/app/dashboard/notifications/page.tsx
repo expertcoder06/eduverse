@@ -8,11 +8,12 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
-import { Bell, Calendar, FileText, CheckCircle } from 'lucide-react';
+import { Bell, Calendar, FileText, CheckCircle, MessageSquare } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
+import { useEffect, useState } from 'react';
 
-const notifications = [
+const initialNotifications = [
   {
     id: 1,
     icon: FileText,
@@ -51,7 +52,38 @@ const notifications = [
   },
 ];
 
+const iconMap = {
+    FileText,
+    Calendar,
+    CheckCircle,
+    MessageSquare,
+} as const;
+
+type Notification = {
+    id: number;
+    icon: keyof typeof iconMap | React.ElementType;
+    title: string;
+    description: string;
+    time: string;
+    read: boolean;
+    category: string;
+}
+
+
 export default function NotificationsPage() {
+  const [notifications, setNotifications] = useState<Notification[]>(initialNotifications);
+
+  useEffect(() => {
+    // This effect runs on the client after hydration
+    const storedNotifications = JSON.parse(localStorage.getItem('notifications') || '[]');
+    // Combine initial notifications with any from local storage, avoiding duplicates
+    setNotifications(prev => {
+      const existingIds = new Set(prev.map(n => n.id));
+      const newNotifications = storedNotifications.filter((n: Notification) => !existingIds.has(n.id));
+      return [...newNotifications, ...prev];
+    });
+
+  }, []);
 
   const handleDownload = (e: React.MouseEvent<HTMLAnchorElement>, title: string) => {
     e.preventDefault();
@@ -84,7 +116,9 @@ export default function NotificationsPage() {
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
-            {notifications.map((notification) => (
+            {notifications.map((notification) => {
+              const Icon = typeof notification.icon === 'string' ? iconMap[notification.icon as keyof typeof iconMap] : notification.icon;
+              return (
               <a
                 key={notification.id}
                 href="#"
@@ -97,7 +131,7 @@ export default function NotificationsPage() {
                 {!notification.read && (
                     <div className="mt-1.5 h-2 w-2 shrink-0 rounded-full bg-accent" />
                 )}
-                <notification.icon className="h-5 w-5 shrink-0 text-muted-foreground mt-1" style={{marginLeft: notification.read ? '16px' : '0'}} />
+                <Icon className="h-5 w-5 shrink-0 text-muted-foreground mt-1" style={{marginLeft: notification.read ? '16px' : '0'}} />
                 <div className="flex-1">
                   <div className="flex items-center justify-between">
                     <p className="font-semibold">{notification.title}</p>
@@ -111,7 +145,8 @@ export default function NotificationsPage() {
                    <Badge variant="outline" className='mt-2'>{notification.category}</Badge>
                 </div>
               </a>
-            ))}
+              )
+            })}
           </div>
         </CardContent>
       </Card>

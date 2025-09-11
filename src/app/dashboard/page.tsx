@@ -23,12 +23,17 @@ import {
   MessageSquare,
   UserCheck,
   CheckCircle,
-  FileText
+  FileText,
+  Send
 } from 'lucide-react';
 import { ProgressChart, SubjectPerformanceChart } from '@/components/performance-charts';
 import { useSearchParams } from 'next/navigation';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Suspense, useEffect, useState } from 'react';
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger, DialogFooter, DialogClose } from '@/components/ui/dialog';
+import { Textarea } from '@/components/ui/textarea';
+import { Label } from '@/components/ui/label';
+import { useToast } from '@/hooks/use-toast';
 
 
 const teacherClasses = [
@@ -48,6 +53,79 @@ const upcomingDeadlines = [
     { title: "History Midterm Exam", due: "Next Monday, 10:00 AM", type: 'exam' },
     { title: "Science Project Proposal", due: "Next Wednesday", type: 'assignment' },
 ]
+
+const AnnouncementDialog = () => {
+    const { toast } = useToast();
+    const [open, setOpen] = useState(false);
+    const [message, setMessage] = useState('');
+
+    const handleSend = () => {
+        if (message.trim().length < 10) {
+             toast({
+                title: "Message too short",
+                description: "Please enter a message with at least 10 characters.",
+                variant: 'destructive'
+            });
+            return;
+        }
+
+        const newAnnouncement = {
+            id: Date.now(),
+            icon: MessageSquare,
+            title: 'New Announcement from Teacher',
+            description: message,
+            time: 'Just now',
+            read: false,
+            category: 'General'
+        };
+
+        const existingNotifications = JSON.parse(localStorage.getItem('notifications') || '[]');
+        localStorage.setItem('notifications', JSON.stringify([newAnnouncement, ...existingNotifications]));
+
+        toast({
+            title: "Announcement Sent!",
+            description: "Your message has been sent to all students."
+        });
+
+        setMessage('');
+        setOpen(false);
+    }
+
+    return (
+        <Dialog open={open} onOpenChange={setOpen}>
+            <DialogTrigger asChild>
+                 <Button variant="outline">New Announcement</Button>
+            </DialogTrigger>
+            <DialogContent>
+                <DialogHeader>
+                    <DialogTitle>Send an Announcement</DialogTitle>
+                    <DialogDescription>
+                        This message will be sent as a notification to all students.
+                    </DialogDescription>
+                </DialogHeader>
+                <div className="grid gap-4 py-4">
+                    <Label htmlFor="message">Message</Label>
+                    <Textarea 
+                        id="message" 
+                        placeholder="Type your announcement here..." 
+                        value={message}
+                        onChange={(e) => setMessage(e.target.value)}
+                        className="min-h-[120px]"
+                    />
+                </div>
+                <DialogFooter>
+                    <DialogClose asChild>
+                        <Button type="button" variant="secondary">Cancel</Button>
+                    </DialogClose>
+                    <Button onClick={handleSend}>
+                        <Send className="mr-2 h-4 w-4" />
+                        Send to Students
+                    </Button>
+                </DialogFooter>
+            </DialogContent>
+        </Dialog>
+    )
+}
 
 
 const TeacherDashboard = ({userName}: {userName: string}) => {
@@ -116,7 +194,7 @@ const TeacherDashboard = ({userName}: {userName: string}) => {
                         <CardDescription>Engage with your students instantly.</CardDescription>
                     </CardHeader>
                     <CardContent className="flex-grow grid grid-cols-2 gap-3">
-                       <Button variant="outline">New Announcement</Button>
+                       <AnnouncementDialog />
                        <Button variant="outline">Create Quiz</Button>
                        <Button variant="outline">Upload Resource</Button>
                        <Button variant="outline">Schedule Meeting</Button>

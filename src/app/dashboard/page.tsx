@@ -1,4 +1,5 @@
 
+
 "use client"
 
 import {
@@ -34,6 +35,7 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, Di
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
+import { Checkbox } from '@/components/ui/checkbox';
 
 
 const teacherClasses = [
@@ -58,6 +60,8 @@ const AnnouncementDialog = () => {
     const { toast } = useToast();
     const [open, setOpen] = useState(false);
     const [message, setMessage] = useState('');
+    const [sendToStudents, setSendToStudents] = useState(true);
+    const [sendToParents, setSendToParents] = useState(false);
 
     const handleSend = () => {
         if (message.trim().length < 10) {
@@ -69,26 +73,54 @@ const AnnouncementDialog = () => {
             return;
         }
 
-        const newAnnouncement = {
-            id: Date.now(),
-            icon: 'MessageSquare',
-            title: 'New Announcement from Teacher',
-            description: message,
-            time: 'Just now',
-            read: false,
-            category: 'General'
-        };
-
+        if (!sendToStudents && !sendToParents) {
+            toast({
+                title: "No recipients selected",
+                description: "Please select who to send the announcement to.",
+                variant: 'destructive'
+            });
+            return;
+        }
+        
         const existingNotifications = JSON.parse(localStorage.getItem('notifications') || '[]');
-        localStorage.setItem('notifications', JSON.stringify([newAnnouncement, ...existingNotifications]));
+        const newNotifications = [];
+
+        if (sendToStudents) {
+            newNotifications.push({
+                id: Date.now() + Math.random(),
+                icon: 'MessageSquare',
+                title: 'New Announcement for Students',
+                description: message,
+                time: 'Just now',
+                read: false,
+                category: 'General'
+            });
+        }
+
+        if (sendToParents) {
+            newNotifications.push({
+                id: Date.now() + Math.random(),
+                icon: 'MessageSquare',
+                title: 'New Announcement for Parents',
+                description: message,
+                time: 'Just now',
+                read: false,
+                category: 'General'
+            });
+        }
+
+
+        localStorage.setItem('notifications', JSON.stringify([...newNotifications, ...existingNotifications]));
 
         toast({
             title: "Announcement Sent!",
-            description: "Your message has been sent to all students."
+            description: "Your message has been sent."
         });
 
         setMessage('');
         setOpen(false);
+        setSendToStudents(true);
+        setSendToParents(false);
     }
 
     return (
@@ -100,18 +132,33 @@ const AnnouncementDialog = () => {
                 <DialogHeader>
                     <DialogTitle>Send an Announcement</DialogTitle>
                     <DialogDescription>
-                        This message will be sent as a notification to all students.
+                        This message will be sent as a notification to the selected roles.
                     </DialogDescription>
                 </DialogHeader>
                 <div className="grid gap-4 py-4">
-                    <Label htmlFor="message">Message</Label>
-                    <Textarea 
-                        id="message" 
-                        placeholder="Type your announcement here..." 
-                        value={message}
-                        onChange={(e) => setMessage(e.target.value)}
-                        className="min-h-[120px]"
-                    />
+                    <div className="space-y-2">
+                        <Label htmlFor="message">Message</Label>
+                        <Textarea 
+                            id="message" 
+                            placeholder="Type your announcement here..." 
+                            value={message}
+                            onChange={(e) => setMessage(e.target.value)}
+                            className="min-h-[120px]"
+                        />
+                    </div>
+                    <div className="space-y-2">
+                        <Label>Send To</Label>
+                        <div className="flex items-center space-x-4">
+                             <div className="flex items-center space-x-2">
+                                <Checkbox id="sendToStudents" checked={sendToStudents} onCheckedChange={(checked) => setSendToStudents(!!checked)} />
+                                <Label htmlFor="sendToStudents">All Students</Label>
+                            </div>
+                             <div className="flex items-center space-x-2">
+                                <Checkbox id="sendToParents" checked={sendToParents} onCheckedChange={(checked) => setSendToParents(!!checked)} />
+                                <Label htmlFor="sendToParents">All Parents</Label>
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 <DialogFooter>
                     <DialogClose asChild>
@@ -119,7 +166,7 @@ const AnnouncementDialog = () => {
                     </DialogClose>
                     <Button onClick={handleSend}>
                         <Send className="mr-2 h-4 w-4" />
-                        Send to Students
+                        Send Message
                     </Button>
                 </DialogFooter>
             </DialogContent>
@@ -477,5 +524,7 @@ export default function Dashboard() {
     </Suspense>
   )
 }
+
+    
 
     

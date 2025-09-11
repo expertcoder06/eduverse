@@ -8,21 +8,79 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Video, PlayCircle, History, Radio, MoreHorizontal, Pencil, Trash2 } from 'lucide-react';
 import Image from 'next/image';
-import { Suspense } from 'react';
+import { Suspense, useState } from 'react';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog';
+import { useToast } from '@/hooks/use-toast';
 
-const recordings = [
-  { title: 'Introduction to Quantum Physics', subject: 'Physics', date: '2023-10-26', image: 'https://picsum.photos/seed/quantum/400/225' },
-  { title: 'The Roman Empire - Rise and Fall', subject: 'History', date: '2023-10-24', image: 'https://picsum.photos/seed/rome/400/225' },
-  { title: 'Calculus I: Limits and Derivatives', subject: 'Math', date: '2023-10-22', image: 'https://picsum.photos/seed/calculus/400/225' },
+
+const initialRecordings = [
+  { id: 1, title: 'Introduction to Quantum Physics', subject: 'Physics', date: '2023-10-26', image: 'https://picsum.photos/seed/quantum/400/225' },
+  { id: 2, title: 'The Roman Empire - Rise and Fall', subject: 'History', date: '2023-10-24', image: 'https://picsum.photos/seed/rome/400/225' },
+  { id: 3, title: 'Calculus I: Limits and Derivatives', subject: 'Math', date: '2023-10-22', image: 'https://picsum.photos/seed/calculus/400/225' },
 ];
 
-const StudentLiveClassesPage = () => (
+type Recording = typeof initialRecordings[0];
+
+
+const EditRecordingDialog = ({ recording, onSave }: { recording: Recording, onSave: (updatedRecording: Recording) => void }) => {
+    const [title, setTitle] = useState(recording.title);
+    const [subject, setSubject] = useState(recording.subject);
+    const [open, setOpen] = useState(false);
+
+    const handleSave = () => {
+        onSave({ ...recording, title, subject });
+        setOpen(false);
+    };
+
+    return (
+        <Dialog open={open} onOpenChange={setOpen}>
+            <DialogTrigger asChild>
+                <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
+                    <Pencil className="mr-2 h-4 w-4" />
+                    Edit Details
+                </DropdownMenuItem>
+            </DialogTrigger>
+            <DialogContent>
+                <DialogHeader>
+                    <DialogTitle>Edit Recording Details</DialogTitle>
+                    <DialogDescription>
+                        Make changes to the title and subject of your recording.
+                    </DialogDescription>
+                </DialogHeader>
+                <div className="grid gap-4 py-4">
+                    <div className="grid grid-cols-4 items-center gap-4">
+                        <Label htmlFor="title" className="text-right">
+                            Title
+                        </Label>
+                        <Input id="title" value={title} onChange={(e) => setTitle(e.target.value)} className="col-span-3" />
+                    </div>
+                    <div className="grid grid-cols-4 items-center gap-4">
+                        <Label htmlFor="subject" className="text-right">
+                            Subject
+                        </Label>
+                        <Input id="subject" value={subject} onChange={(e) => setSubject(e.target.value)} className="col-span-3" />
+                    </div>
+                </div>
+                <DialogFooter>
+                    <DialogClose asChild>
+                        <Button type="button" variant="secondary">Cancel</Button>
+                    </DialogClose>
+                    <Button type="button" onClick={handleSave}>Save Changes</Button>
+                </DialogFooter>
+            </DialogContent>
+        </Dialog>
+    );
+};
+
+
+const StudentLiveClassesPage = ({recordings}: {recordings: Recording[]}) => (
   <div className="space-y-8">
     <div>
       <h1 className="text-3xl font-bold font-headline">Live Classes</h1>
@@ -55,7 +113,7 @@ const StudentLiveClassesPage = () => (
       </h2>
       <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
         {recordings.map((rec) => (
-          <Card key={rec.title} className="overflow-hidden transition-transform transform hover:scale-105 hover:shadow-xl">
+          <Card key={rec.id} className="overflow-hidden transition-transform transform hover:scale-105 hover:shadow-xl">
             <div className="relative">
               <Image src={rec.image} alt={rec.title} width={400} height={225} className="aspect-video w-full object-cover" />
               <div className="absolute inset-0 bg-black/40 flex items-center justify-center">
@@ -78,7 +136,7 @@ const StudentLiveClassesPage = () => (
   </div>
 );
 
-const TeacherLiveClassesPage = () => (
+const TeacherLiveClassesPage = ({recordings, onEdit, onDelete}: {recordings: Recording[], onEdit: (rec: Recording) => void, onDelete: (id: number) => void}) => (
   <div className="space-y-8">
     <div>
       <h1 className="text-3xl font-bold font-headline">Manage Live Classes</h1>
@@ -109,7 +167,7 @@ const TeacherLiveClassesPage = () => (
         </CardHeader>
         <CardContent className="space-y-4">
           {recordings.map((rec) => (
-            <div key={rec.title} className="flex items-center justify-between rounded-lg border p-4">
+            <div key={rec.id} className="flex items-center justify-between rounded-lg border p-4">
               <div>
                 <p className="font-semibold">{rec.title}</p>
                 <p className="text-sm text-muted-foreground">{rec.date}</p>
@@ -122,14 +180,27 @@ const TeacherLiveClassesPage = () => (
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end">
-                  <DropdownMenuItem>
-                    <Pencil className="mr-2 h-4 w-4" />
-                    Edit Details
-                  </DropdownMenuItem>
-                  <DropdownMenuItem className="text-destructive">
-                    <Trash2 className="mr-2 h-4 w-4" />
-                    Delete
-                  </DropdownMenuItem>
+                  <EditRecordingDialog recording={rec} onSave={onEdit} />
+                  <AlertDialog>
+                    <AlertDialogTrigger asChild>
+                        <DropdownMenuItem className="text-destructive" onSelect={(e) => e.preventDefault()}>
+                            <Trash2 className="mr-2 h-4 w-4" />
+                            Delete
+                        </DropdownMenuItem>
+                    </AlertDialogTrigger>
+                     <AlertDialogContent>
+                        <AlertDialogHeader>
+                        <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+                        <AlertDialogDescription>
+                            This action cannot be undone. This will permanently delete the recording "{rec.title}".
+                        </AlertDialogDescription>
+                        </AlertDialogHeader>
+                        <AlertDialogFooter>
+                        <AlertDialogCancel>Cancel</AlertDialogCancel>
+                        <AlertDialogAction onClick={() => onDelete(rec.id)}>Delete</AlertDialogAction>
+                        </AlertDialogFooter>
+                    </AlertDialogContent>
+                  </AlertDialog>
                 </DropdownMenuContent>
               </DropdownMenu>
             </div>
@@ -143,12 +214,30 @@ const TeacherLiveClassesPage = () => (
 function LiveClassesContent() {
   const searchParams = useSearchParams();
   const role = searchParams.get('role');
+  const [recordings, setRecordings] = useState(initialRecordings);
+  const { toast } = useToast();
 
-  if (role === 'teacher') {
-    return <TeacherLiveClassesPage />;
+  const handleEdit = (updatedRecording: Recording) => {
+      setRecordings(prev => prev.map(r => r.id === updatedRecording.id ? updatedRecording : r));
+      toast({
+          title: "Recording Updated",
+          description: "The recording details have been saved."
+      });
   }
 
-  return <StudentLiveClassesPage />;
+  const handleDelete = (id: number) => {
+      setRecordings(prev => prev.filter(r => r.id !== id));
+      toast({
+          title: "Recording Deleted",
+          description: "The recording has been removed."
+      })
+  }
+
+  if (role === 'teacher') {
+    return <TeacherLiveClassesPage recordings={recordings} onEdit={handleEdit} onDelete={handleDelete} />;
+  }
+
+  return <StudentLiveClassesPage recordings={recordings} />;
 }
 
 export default function LiveClassesPage() {

@@ -169,6 +169,12 @@ const UploadResourceDialog = ({ onUpload }: { onUpload: (resource: Resource, typ
                                 </SelectContent>
                             </Select>
                         </div>
+                         <div className="grid grid-cols-4 items-center gap-4">
+                            <Label htmlFor="file" className="text-right">
+                                File
+                            </Label>
+                            <Input id="file" name="file" type="file" className="col-span-3" />
+                        </div>
                     </div>
                     <DialogFooter>
                          <DialogClose asChild>
@@ -362,5 +368,3 @@ export default function LibraryPage() {
     </Suspense>
   )
 }
-
-    

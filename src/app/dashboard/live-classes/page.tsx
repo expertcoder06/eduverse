@@ -86,9 +86,29 @@ const EditRecordingDialog = ({ recording, onSave }: { recording: Recording, onSa
 };
 
 
-const StudentLiveClassesPage = ({recordings, liveClass}: {recordings: Recording[], liveClass: LiveClass | null}) => {
+const StudentLiveClassesPage = ({recordings, liveClass, onLiveClassUpdate}: {recordings: Recording[], liveClass: LiveClass | null, onLiveClassUpdate: (lc: LiveClass | null) => void}) => {
     const router = useRouter();
     const searchParams = useSearchParams();
+
+    useEffect(() => {
+        const checkLiveClass = () => {
+            const storedLiveClass = localStorage.getItem('liveClass');
+            if (storedLiveClass) {
+                const lc = JSON.parse(storedLiveClass);
+                if (lc.isLive) {
+                    onLiveClassUpdate(lc);
+                } else {
+                    onLiveClassUpdate(null);
+                    localStorage.removeItem('liveClass');
+                }
+            }
+        };
+
+        checkLiveClass();
+        const interval = setInterval(checkLiveClass, 3000); // Poll every 3 seconds
+
+        return () => clearInterval(interval);
+    }, [onLiveClassUpdate]);
 
     const handleJoinLive = () => {
         if (!liveClass) return;
@@ -289,6 +309,10 @@ function LiveClassesContent() {
           isLive: true,
       };
       setLiveClass(newLiveClass);
+      
+      if (typeof window !== 'undefined') {
+        localStorage.setItem('liveClass', JSON.stringify(newLiveClass));
+      }
 
       // This is a simulation of sending an email.
       // In a real app, this would be an API call to a backend service.
@@ -307,7 +331,7 @@ function LiveClassesContent() {
     return <TeacherLiveClassesPage recordings={recordings} onEdit={handleEdit} onDelete={handleDelete} onGoLive={handleGoLive} />;
   }
 
-  return <StudentLiveClassesPage recordings={recordings} liveClass={liveClass} />;
+  return <StudentLiveClassesPage recordings={recordings} liveClass={liveClass} onLiveClassUpdate={setLiveClass} />;
 }
 
 export default function LiveClassesPage() {
@@ -317,3 +341,5 @@ export default function LiveClassesPage() {
     </Suspense>
   )
 }
+
+    

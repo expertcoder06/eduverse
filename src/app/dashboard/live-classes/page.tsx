@@ -6,9 +6,15 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Video, PlayCircle, History, Radio } from 'lucide-react';
+import { Video, PlayCircle, History, Radio, MoreHorizontal, Pencil, Trash2 } from 'lucide-react';
 import Image from 'next/image';
 import { Suspense } from 'react';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
 
 const recordings = [
   { title: 'Introduction to Quantum Physics', subject: 'Physics', date: '2023-10-26', image: 'https://picsum.photos/seed/quantum/400/225' },
@@ -108,7 +114,24 @@ const TeacherLiveClassesPage = () => (
                 <p className="font-semibold">{rec.title}</p>
                 <p className="text-sm text-muted-foreground">{rec.date}</p>
               </div>
-              <Button variant="ghost" size="sm">Manage</Button>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="ghost" size="icon" className="h-8 w-8">
+                    <MoreHorizontal className="h-4 w-4" />
+                    <span className="sr-only">Manage</span>
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end">
+                  <DropdownMenuItem>
+                    <Pencil className="mr-2 h-4 w-4" />
+                    Edit Details
+                  </DropdownMenuItem>
+                  <DropdownMenuItem className="text-destructive">
+                    <Trash2 className="mr-2 h-4 w-4" />
+                    Delete
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
             </div>
           ))}
         </CardContent>

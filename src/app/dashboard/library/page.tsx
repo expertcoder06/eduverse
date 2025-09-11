@@ -27,6 +27,8 @@ const resources = {
     { title: 'Shakespearean Sonnets', subject: 'English', image: 'https://picsum.photos/400/250?random=4', dataAiHint: 'old book' },
   ],
   ebooks: [
+    { title: 'Pride and Prejudice', subject: 'English', image: 'https://picsum.photos/seed/prejudice/400/250', dataAiHint: 'classic novel' },
+    { title: 'Calculus: A Modern Approach', subject: 'Math', image: 'https://picsum.photos/seed/calculus-book/400/250', dataAiHint: 'math textbook' },
     { title: 'A Brief History of Time', subject: 'Physics', image: 'https://picsum.photos/400/250?random=5', dataAiHint: 'space galaxy' },
     { title: 'The Elements of Style', subject: 'English', image: 'https://picsum.photos/400/250?random=6', dataAiHint: 'writing typography' },
     { title: 'Cosmos', subject: 'Astronomy', image: 'https://picsum.photos/400/250?random=7', dataAiHint: 'stars night' },
@@ -44,30 +46,44 @@ type Resource = {
     dataAiHint: string;
 }
 
-const ResourceCard = ({ resource }: { resource: Resource }) => (
-  <Card className="overflow-hidden transition-transform transform hover:scale-105 hover:shadow-xl">
-    <CardHeader className="p-0">
-      <Image
-        src={resource.image}
-        alt={resource.title}
-        width={400}
-        height={250}
-        className="aspect-video w-full object-cover"
-        data-ai-hint={resource.dataAiHint}
-      />
-    </CardHeader>
-    <CardContent className="p-4">
-        <CardTitle className="text-lg">{resource.title}</CardTitle>
-        <CardDescription>{resource.subject}</CardDescription>
-    </CardContent>
-    <CardFooter className='p-4 pt-0'>
-        <Button variant="outline" className="w-full">
-            <Download className="mr-2 h-4 w-4" />
-            Download
-        </Button>
-    </CardFooter>
-  </Card>
-);
+const ResourceCard = ({ resource }: { resource: Resource }) => {
+  const handleDownload = () => {
+    const fileContent = `This is a dummy file for ${resource.title}.\n\nIn a real application, this would be the actual resource file.`;
+    const blob = new Blob([fileContent], { type: 'text/plain' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `${resource.title.replace(/\s+/g, '_')}.txt`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+  };
+  
+  return (
+    <Card className="overflow-hidden transition-transform transform hover:scale-105 hover:shadow-xl">
+        <CardHeader className="p-0">
+        <Image
+            src={resource.image}
+            alt={resource.title}
+            width={400}
+            height={250}
+            className="aspect-video w-full object-cover"
+            data-ai-hint={resource.dataAiHint}
+        />
+        </CardHeader>
+        <CardContent className="p-4">
+            <CardTitle className="text-lg">{resource.title}</CardTitle>
+            <CardDescription>{resource.subject}</CardDescription>
+        </CardContent>
+        <CardFooter className='p-4 pt-0'>
+            <Button variant="outline" className="w-full" onClick={handleDownload}>
+                <Download className="mr-2 h-4 w-4" />
+                Download
+            </Button>
+        </CardFooter>
+    </Card>
+)};
 
 
 const TeacherLibraryPage = () => (

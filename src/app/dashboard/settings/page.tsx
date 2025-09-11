@@ -46,21 +46,7 @@ const passwordFormSchema = z.object({
 export default function SettingsPage() {
   const { toast } = useToast();
   const [isLoading, setIsLoading] = useState({ profile: false, password: false });
-  const [userName, setUserName] = useState('');
-  const [userEmail, setUserEmail] = useState('');
   const { theme, setTheme } = useTheme();
-
-  useEffect(() => {
-    if (typeof window !== 'undefined') {
-      const storedUser = localStorage.getItem('user');
-      if (storedUser) {
-        const user = JSON.parse(storedUser);
-        setUserName(user.name);
-        setUserEmail(user.email);
-        profileForm.reset({ name: user.name, email: user.email });
-      }
-    }
-  }, []);
 
   const profileForm = useForm<z.infer<typeof profileFormSchema>>({
     resolver: zodResolver(profileFormSchema),
@@ -71,6 +57,16 @@ export default function SettingsPage() {
     resolver: zodResolver(passwordFormSchema),
     defaultValues: { currentPassword: '', newPassword: '', confirmPassword: '' },
   });
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const storedUser = localStorage.getItem('user');
+      if (storedUser) {
+        const user = JSON.parse(storedUser);
+        profileForm.reset({ name: user.name, email: user.email });
+      }
+    }
+  }, [profileForm]);
 
   function onProfileSubmit(values: z.infer<typeof profileFormSchema>) {
     setIsLoading(prev => ({...prev, profile: true}));

@@ -192,36 +192,6 @@ export default function LandingPage() {
           </div>
         </section>
 
-        <section id="demo" className="py-20 px-4">
-          <div className="container mx-auto text-center">
-            <div className="animate-fade-in-up">
-                <h2 className="text-3xl md:text-4xl font-bold mb-12 font-headline">See It In Action</h2>
-            </div>
-             <Carousel 
-                className="w-full max-w-4xl mx-auto animate-fade-in-up" 
-                style={{ animationDelay: '200ms' }} 
-                opts={{}}
-                plugins={[plugin.current]}
-                onMouseEnter={() => plugin.current.stop()}
-                onMouseLeave={() => plugin.current.play()}
-                >
-              <CarouselContent>
-                <CarouselItem>
-                  <Image src="https://picsum.photos/seed/dashboard/1200/700" alt="Student Dashboard Preview" width={1200} height={700} className="rounded-lg shadow-2xl" data-ai-hint="student dashboard analytics" />
-                </CarouselItem>
-                <CarouselItem>
-                   <Image src="https://picsum.photos/seed/resources/1200/700" alt="Resource Library Preview" width={1200} height={700} className="rounded-lg shadow-2xl" data-ai-hint="digital library education" />
-                </CarouselItem>
-                <CarouselItem>
-                   <Image src="https://picsum.photos/seed/gamification/1200/700" alt="Gamified Rewards Preview" width={1200} height={700} className="rounded-lg shadow-2xl" data-ai-hint="gamification rewards achievement" />
-                </CarouselItem>
-              </CarouselContent>
-              <CarouselPrevious className="left-[-50px] transition-transform transform hover:scale-110" />
-              <CarouselNext className="right-[-50px] transition-transform transform hover:scale-110" />
-            </Carousel>
-          </div>
-        </section>
-
          <section id="why-choose-us" className="py-20 px-4 bg-background/50">
             <div className="container mx-auto text-center">
                 <div className="animate-fade-in-up">

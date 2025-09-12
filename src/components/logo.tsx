@@ -4,7 +4,7 @@ import * as React from 'react';
 export function Logo() {
   return (
     <Image
-      src="https://picsum.photos/seed/plogo/48/48"
+      src="https://picsum.photos/seed/pl-logo/48/48"
       alt="Pro Learning Logo"
       width={48}
       height={48}
